@@ -1,0 +1,1901 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Code of Darkness — We Build in the Shadows</title>
+<meta name="description" content="Code of Darkness is an elite tech collective engineering secure, scalable and impossibly fast digital systems." />
+<meta name="theme-color" content="#05050a" />
+
+<!-- Open Graph -->
+<meta property="og:title" content="Code of Darkness" />
+<meta property="og:description" content="An elite tech collective engineering secure, scalable digital systems." />
+<meta property="og:type" content="website" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet" />
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%2305050a'/%3E%3Ctext x='50' y='68' font-size='54' font-family='monospace' fill='%238b5cf6' text-anchor='middle'%3E%E2%97%88%3C/text%3E%3C/svg%3E" />
+
+<style>
+/* ============================================================
+   0. DESIGN TOKENS
+   ============================================================ */
+:root{
+  --bg:#05050a;
+  --bg-2:#08080f;
+  --panel:rgba(255,255,255,.028);
+  --panel-hi:rgba(255,255,255,.055);
+  --line:rgba(255,255,255,.08);
+  --line-hi:rgba(255,255,255,.16);
+
+  --txt:#e8eaf6;
+  --muted:#8b90a8;
+  --dim:#5a5f78;
+
+  --accent:#8b5cf6;
+  --accent-2:#00e5ff;
+  --accent-3:#ff2d75;
+  --accent-4:#22ff88;
+
+  --grad:linear-gradient(120deg,#8b5cf6 0%,#00e5ff 55%,#22ff88 100%);
+  --grad-soft:linear-gradient(120deg,rgba(139,92,246,.18),rgba(0,229,255,.10));
+
+  --glow:0 0 40px rgba(139,92,246,.35);
+  --glow-2:0 0 40px rgba(0,229,255,.28);
+
+  --radius:18px;
+  --radius-sm:12px;
+  --max:1220px;
+
+  --f-display:'Orbitron',system-ui,sans-serif;
+  --f-body:'Inter',system-ui,-apple-system,sans-serif;
+  --f-mono:'JetBrains Mono',ui-monospace,monospace;
+
+  --ease:cubic-bezier(.16,1,.3,1);
+}
+
+/* ============================================================
+   1. RESET & BASE
+   ============================================================ */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  background:var(--bg);
+  color:var(--txt);
+  font-family:var(--f-body);
+  font-size:16px;
+  line-height:1.65;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+body.lock{overflow:hidden}
+img,svg{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+button,input,textarea,select{font:inherit;color:inherit;background:none;border:none;outline:none}
+button{cursor:pointer}
+ul{list-style:none}
+::selection{background:var(--accent);color:#fff}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-track{background:#07070d}
+::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#8b5cf6,#00e5ff);border-radius:20px;border:2px solid #07070d}
+::-webkit-scrollbar-thumb:hover{background:linear-gradient(180deg,#a78bfa,#22d3ee)}
+
+/* ============================================================
+   2. LAYOUT HELPERS
+   ============================================================ */
+.container{width:100%;max-width:var(--max);margin-inline:auto;padding-inline:24px}
+section{position:relative;padding:120px 0;scroll-margin-top:90px}
+.grad-text{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+
+.eyebrow{
+  display:inline-flex;align-items:center;gap:10px;
+  font-family:var(--f-mono);font-size:.74rem;letter-spacing:.28em;text-transform:uppercase;
+  color:var(--accent-2);margin-bottom:18px;
+}
+.eyebrow::before{content:"";width:26px;height:1px;background:var(--accent-2);box-shadow:0 0 10px var(--accent-2)}
+
+.section-head{max-width:720px;margin-bottom:64px}
+.section-head h2{
+  font-family:var(--f-display);font-weight:800;
+  font-size:clamp(1.9rem,4.2vw,3.1rem);line-height:1.12;letter-spacing:-.01em;
+  margin-bottom:18px;
+}
+.section-head p{color:var(--muted);font-size:1.02rem;max-width:620px}
+.section-head.center{margin-inline:auto;text-align:center}
+.section-head.center p{margin-inline:auto}
+
+/* ============================================================
+   3. BACKDROP LAYERS
+   ============================================================ */
+#bg{
+  position:fixed;inset:0;width:100%;height:100%;
+  z-index:0;pointer-events:none;
+}
+.grid-overlay{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:
+    linear-gradient(rgba(139,92,246,.045) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(139,92,246,.045) 1px,transparent 1px);
+  background-size:64px 64px;
+  mask-image:radial-gradient(ellipse 90% 70% at 50% 40%,#000 20%,transparent 80%);
+  -webkit-mask-image:radial-gradient(ellipse 90% 70% at 50% 40%,#000 20%,transparent 80%);
+}
+.noise{
+  position:fixed;inset:0;z-index:2;pointer-events:none;opacity:.035;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.orb{
+  position:fixed;border-radius:50%;filter:blur(120px);z-index:0;pointer-events:none;opacity:.35;
+  animation:float 18s ease-in-out infinite;
+}
+.orb-1{width:520px;height:520px;background:#6d28d9;top:-180px;left:-140px}
+.orb-2{width:440px;height:440px;background:#0891b2;bottom:-160px;right:-120px;animation-delay:-9s}
+@keyframes float{
+  0%,100%{transform:translate(0,0) scale(1)}
+  50%{transform:translate(50px,-40px) scale(1.12)}
+}
+
+/* ============================================================
+   4. PRELOADER
+   ============================================================ */
+#preloader{
+  position:fixed;inset:0;z-index:9999;
+  display:grid;place-content:center;justify-items:center;gap:22px;
+  background:#040408;
+  transition:opacity .7s var(--ease),visibility .7s;
+}
+#preloader.done{opacity:0;visibility:hidden}
+.pre-logo{
+  font-family:var(--f-display);font-weight:900;font-size:clamp(2rem,7vw,3.4rem);
+  letter-spacing:.22em;
+  background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:pulse 1.8s ease-in-out infinite;
+}
+@keyframes pulse{0%,100%{opacity:.55;filter:blur(.4px)}50%{opacity:1;filter:blur(0)}}
+.pre-bar{width:220px;height:2px;background:rgba(255,255,255,.08);overflow:hidden;border-radius:4px}
+.pre-bar span{display:block;height:100%;width:40%;background:var(--grad);animation:slide 1.2s ease-in-out infinite}
+@keyframes slide{0%{transform:translateX(-110%)}100%{transform:translateX(320%)}}
+.pre-text{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.3em;color:var(--dim);text-transform:uppercase}
+
+/* ============================================================
+   5. CUSTOM CURSOR
+   ============================================================ */
+.cursor-dot,.cursor-ring{
+  position:fixed;top:0;left:0;border-radius:50%;pointer-events:none;z-index:9998;
+  mix-blend-mode:screen;
+}
+.cursor-dot{width:6px;height:6px;background:var(--accent-2);box-shadow:0 0 12px var(--accent-2)}
+.cursor-ring{
+  width:34px;height:34px;border:1px solid rgba(139,92,246,.7);
+  transition:width .25s var(--ease),height .25s var(--ease),background .25s,border-color .25s;
+}
+.cursor-ring.hover{width:58px;height:58px;background:rgba(139,92,246,.12);border-color:var(--accent-2)}
+@media (hover:none),(max-width:900px){.cursor-dot,.cursor-ring{display:none}}
+
+/* ============================================================
+   6. SCROLL PROGRESS + BACK TO TOP
+   ============================================================ */
+#progress{
+  position:fixed;top:0;left:0;height:2px;width:0%;z-index:9997;
+  background:var(--grad);box-shadow:0 0 14px rgba(139,92,246,.8);
+  transition:width .08s linear;
+}
+#toTop{
+  position:fixed;right:26px;bottom:26px;z-index:900;
+  width:48px;height:48px;border-radius:50%;
+  display:grid;place-content:center;
+  background:rgba(139,92,246,.12);border:1px solid rgba(139,92,246,.4);
+  backdrop-filter:blur(12px);
+  opacity:0;visibility:hidden;transform:translateY(16px);
+  transition:.4s var(--ease);
+}
+#toTop.show{opacity:1;visibility:visible;transform:translateY(0)}
+#toTop:hover{background:rgba(139,92,246,.28);box-shadow:var(--glow);transform:translateY(-4px)}
+
+/* ============================================================
+   7. NAVIGATION
+   ============================================================ */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:1000;
+  padding:20px 0;
+  transition:padding .4s var(--ease),background .4s,backdrop-filter .4s,border-color .4s;
+  border-bottom:1px solid transparent;
+}
+.nav.scrolled{
+  padding:12px 0;
+  background:rgba(5,5,10,.72);
+  backdrop-filter:blur(18px) saturate(160%);
+  -webkit-backdrop-filter:blur(18px) saturate(160%);
+  border-bottom-color:var(--line);
+}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;gap:24px;position:relative;z-index:2}
+
+.logo{display:flex;align-items:center;gap:11px;font-family:var(--f-display);font-weight:800;letter-spacing:.06em}
+.logo-mark{
+  width:36px;height:36px;display:grid;place-content:center;border-radius:10px;
+  background:var(--grad-soft);border:1px solid rgba(139,92,246,.35);
+  color:var(--accent-2);font-size:1rem;
+  box-shadow:0 0 22px rgba(139,92,246,.25) inset;
+  transition:.4s var(--ease);
+}
+.logo:hover .logo-mark{transform:rotate(135deg);box-shadow:0 0 28px rgba(0,229,255,.45)}
+.logo-text{font-size:.85rem;letter-spacing:.16em}
+.logo-text span{color:var(--accent);margin:0 3px}
+
+.nav-links{display:flex;align-items:center;gap:34px}
+.nav-links a{
+  position:relative;font-size:.86rem;font-weight:500;letter-spacing:.02em;color:var(--muted);
+  transition:color .3s;
+}
+.nav-links a::after{
+  content:"";position:absolute;left:0;bottom:-6px;width:0;height:1px;
+  background:var(--grad);transition:width .35s var(--ease);
+}
+.nav-links a:hover,.nav-links a.active{color:var(--txt)}
+.nav-links a:hover::after,.nav-links a.active::after{width:100%}
+.nav-cta{
+  padding:10px 22px !important;border-radius:100px;
+  background:var(--grad-soft) !important;border:1px solid rgba(139,92,246,.42) !important;
+  color:var(--txt) !important;font-weight:600;
+  transition:.35s var(--ease);
+}
+.nav-cta::after{display:none}
+.nav-cta:hover{box-shadow:var(--glow);border-color:var(--accent-2) !important;transform:translateY(-2px)}
+
+.burger{display:none;flex-direction:column;gap:5px;padding:8px;position:relative;z-index:1002}
+.burger span{width:24px;height:2px;background:var(--txt);border-radius:2px;transition:.35s var(--ease)}
+.burger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.burger.open span:nth-child(2){opacity:0;transform:scaleX(0)}
+.burger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+
+@media(max-width:980px){
+  .burger{display:flex}
+  .nav-links{
+    position:fixed;inset:0;z-index:1001;
+    flex-direction:column;justify-content:center;gap:26px;
+    background:rgba(4,4,9,.97);
+    backdrop-filter:blur(24px);
+    transform:translateY(-102%);
+    transition:transform .6s var(--ease);
+    font-size:1.15rem;
+  }
+  .nav-links.open{transform:translateY(0)}
+  .nav-links a{font-size:1.15rem;letter-spacing:.06em}
+  .nav-cta{padding:14px 36px !important}
+}
+
+/* ============================================================
+   8. BUTTONS
+   ============================================================ */
+.btn{
+  position:relative;display:inline-flex;align-items:center;gap:10px;
+  padding:15px 32px;border-radius:100px;
+  font-size:.88rem;font-weight:600;letter-spacing:.02em;
+  overflow:hidden;isolation:isolate;
+  transition:.4s var(--ease);
+  white-space:nowrap;
+}
+.btn svg{width:16px;height:16px;transition:transform .35s var(--ease)}
+.btn:hover svg{transform:translateX(4px)}
+
+.btn-primary{background:var(--grad);color:#05050a;font-weight:700}
+.btn-primary::before{
+  content:"";position:absolute;inset:0;z-index:-1;background:var(--grad);
+  filter:blur(16px);opacity:.55;transition:opacity .4s;
+}
+.btn-primary:hover{transform:translateY(-3px)}
+.btn-primary:hover::before{opacity:.9}
+
+.btn-ghost{
+  border:1px solid var(--line-hi);color:var(--txt);
+  background:rgba(255,255,255,.02);backdrop-filter:blur(10px);
+}
+.btn-ghost:hover{border-color:var(--accent-2);background:rgba(0,229,255,.06);transform:translateY(-3px);box-shadow:var(--glow-2)}
+
+/* ============================================================
+   9. HERO
+   ============================================================ */
+.hero{
+  min-height:100vh;display:flex;align-items:center;
+  padding:150px 0 90px;position:relative;overflow:hidden;
+}
+.hero-inner{position:relative;z-index:3;text-align:center;max-width:1000px;margin-inline:auto}
+
+.hero-badge{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:8px 20px;border-radius:100px;margin-bottom:32px;
+  font-family:var(--f-mono);font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--muted);
+  background:rgba(255,255,255,.03);
+  border:1px solid var(--line);
+  backdrop-filter:blur(10px);
+}
+.dot{
+  width:7px;height:7px;border-radius:50%;background:var(--accent-4);
+  box-shadow:0 0 10px var(--accent-4);
+  animation:blink 2s ease-in-out infinite;
+}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+
+.hero h1{
+  font-family:var(--f-display);font-weight:900;
+  font-size:clamp(2.4rem,9vw,7rem);
+  line-height:.95;letter-spacing:-.02em;
+  margin-bottom:26px;text-transform:uppercase;
+}
+.hero h1 .line{display:block}
+
+/* Glitch */
+.glitch{position:relative;display:inline-block;color:#fff;text-shadow:0 0 40px rgba(139,92,246,.55)}
+.glitch::before,.glitch::after{
+  content:attr(data-text);position:absolute;left:0;top:0;width:100%;height:100%;
+  pointer-events:none;
+}
+.glitch::before{
+  color:var(--accent-2);z-index:-1;
+  animation:glitchTop 3.2s infinite steps(2,end);
+  clip-path:polygon(0 0,100% 0,100% 46%,0 46%);
+}
+.glitch::after{
+  color:var(--accent-3);z-index:-2;
+  animation:glitchBottom 2.6s infinite steps(2,end);
+  clip-path:polygon(0 54%,100% 54%,100% 100%,0 100%);
+}
+@keyframes glitchTop{
+  0%,88%,100%{transform:translate(0,0);opacity:0}
+  90%{transform:translate(-4px,-3px);opacity:.9}
+  93%{transform:translate(3px,2px);opacity:.7}
+  96%{transform:translate(-2px,1px);opacity:.85}
+}
+@keyframes glitchBottom{
+  0%,86%,100%{transform:translate(0,0);opacity:0}
+  88%{transform:translate(4px,3px);opacity:.85}
+  92%{transform:translate(-3px,-2px);opacity:.65}
+  95%{transform:translate(2px,-1px);opacity:.8}
+}
+
+.typed-wrap{
+  font-family:var(--f-mono);font-size:clamp(.85rem,2vw,1.15rem);
+  color:var(--accent-2);letter-spacing:.02em;
+  min-height:1.8em;margin-bottom:26px;
+}
+.caret{display:inline-block;width:9px;height:1.05em;background:var(--accent-2);
+  vertical-align:-.16em;margin-left:4px;animation:blink 1s steps(1) infinite}
+
+.hero p.lead{
+  color:var(--muted);font-size:clamp(.95rem,1.6vw,1.08rem);
+  max-width:640px;margin:0 auto 42px;
+}
+.hero-actions{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:70px}
+
+.hero-strip{
+  display:flex;flex-wrap:wrap;justify-content:center;gap:14px 40px;
+  font-family:var(--f-mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);
+}
+.hero-strip span{display:flex;align-items:center;gap:9px}
+.hero-strip span::before{content:"";width:4px;height:4px;background:var(--accent);border-radius:50%}
+
+.scroll-cue{
+  position:absolute;bottom:34px;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+  font-family:var(--f-mono);font-size:.62rem;letter-spacing:.3em;color:var(--dim);text-transform:uppercase;
+}
+.scroll-cue .rail{width:1px;height:52px;background:linear-gradient(180deg,var(--accent),transparent);position:relative;overflow:hidden}
+.scroll-cue .rail::after{
+  content:"";position:absolute;top:-52px;left:0;width:1px;height:52px;
+  background:var(--accent-2);animation:trail 2s ease-in-out infinite;
+}
+@keyframes trail{0%{top:-52px}100%{top:52px}}
+
+/* ============================================================
+   10. MARQUEE
+   ============================================================ */
+.marquee{
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  padding:22px 0;overflow:hidden;position:relative;z-index:3;
+  background:rgba(255,255,255,.012);
+  mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);
+}
+.marquee-track{display:flex;gap:60px;width:max-content;animation:scrollX 32s linear infinite}
+.marquee:hover .marquee-track{animation-play-state:paused}
+.marquee-item{
+  font-family:var(--f-display);font-size:.9rem;font-weight:700;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--dim);white-space:nowrap;
+  display:flex;align-items:center;gap:60px;transition:color .3s;
+}
+.marquee-item::after{content:"◈";color:var(--accent);font-size:.8rem}
+.marquee-track:hover .marquee-item{color:var(--txt)}
+@keyframes scrollX{to{transform:translateX(-50%)}}
+
+/* ============================================================
+   11. REVEAL ANIMATION
+   ============================================================ */
+.reveal{opacity:0;transform:translateY(36px);transition:opacity .9s var(--ease),transform .9s var(--ease)}
+.reveal.in{opacity:1;transform:none}
+
+/* ============================================================
+   12. ABOUT + STATS
+   ============================================================ */
+.about-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:70px;align-items:center}
+@media(max-width:960px){.about-grid{grid-template-columns:1fr;gap:50px}}
+
+.about-copy h2{
+  font-family:var(--f-display);font-weight:800;
+  font-size:clamp(1.8rem,4vw,2.9rem);line-height:1.14;margin-bottom:22px;
+}
+.about-copy p{color:var(--muted);margin-bottom:20px}
+.about-list{display:grid;gap:14px;margin:30px 0 36px}
+.about-list li{display:flex;gap:14px;align-items:flex-start;font-size:.94rem;color:#c3c7da}
+.about-list li svg{flex:0 0 18px;margin-top:4px;color:var(--accent-4)}
+
+.terminal{
+  border-radius:var(--radius);border:1px solid var(--line);
+  background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.012));
+  backdrop-filter:blur(14px);
+  overflow:hidden;box-shadow:0 30px 70px rgba(0,0,0,.6);
+}
+.terminal-bar{
+  display:flex;align-items:center;gap:8px;padding:13px 16px;
+  border-bottom:1px solid var(--line);background:rgba(0,0,0,.3);
+}
+.terminal-bar i{width:10px;height:10px;border-radius:50%;display:block}
+.terminal-bar i:nth-child(1){background:#ff5f57}
+.terminal-bar i:nth-child(2){background:#febc2e}
+.terminal-bar i:nth-child(3){background:#28c840}
+.terminal-bar span{margin-left:auto;font-family:var(--f-mono);font-size:.68rem;color:var(--dim);letter-spacing:.1em}
+.terminal-body{padding:26px;font-family:var(--f-mono);font-size:.82rem;line-height:2}
+.terminal-body .c-key{color:var(--accent)}
+.terminal-body .c-str{color:var(--accent-4)}
+.terminal-body .c-fn{color:var(--accent-2)}
+.terminal-body .c-com{color:var(--dim)}
+
+.stats{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:24px;
+  margin-top:90px;padding-top:60px;border-top:1px solid var(--line);
+}
+@media(max-width:700px){.stats{grid-template-columns:repeat(2,1fr);gap:36px 20px}}
+.stat h3{
+  font-family:var(--f-display);font-weight:900;
+  font-size:clamp(2rem,5vw,3.1rem);line-height:1;
+  background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.stat p{margin-top:10px;font-family:var(--f-mono);font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--dim)}
+
+/* ============================================================
+   13. SERVICES
+   ============================================================ */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:22px}
+.card{
+  position:relative;padding:38px 32px;border-radius:var(--radius);
+  background:var(--panel);border:1px solid var(--line);
+  overflow:hidden;transition:.5s var(--ease);
+}
+.card::before{
+  content:"";position:absolute;inset:0;opacity:0;transition:opacity .5s;
+  background:radial-gradient(420px circle at var(--mx,50%) var(--my,0%),rgba(139,92,246,.16),transparent 62%);
+}
+.card:hover{transform:translateY(-8px);border-color:var(--line-hi);background:var(--panel-hi)}
+.card:hover::before{opacity:1}
+.card > *{position:relative;z-index:1}
+
+.card-icon{
+  width:52px;height:52px;border-radius:14px;display:grid;place-content:center;
+  background:var(--grad-soft);border:1px solid rgba(139,92,246,.3);
+  color:var(--accent-2);margin-bottom:24px;transition:.5s var(--ease);
+}
+.card:hover .card-icon{transform:translateY(-4px) rotate(-6deg);box-shadow:var(--glow);color:#fff}
+.card-icon svg{width:24px;height:24px}
+
+.card h3{font-family:var(--f-display);font-size:1.05rem;font-weight:700;letter-spacing:.03em;margin-bottom:12px}
+.card p{color:var(--muted);font-size:.92rem;margin-bottom:20px}
+.card .tags{display:flex;flex-wrap:wrap;gap:8px}
+.card .tags span{
+  font-family:var(--f-mono);font-size:.66rem;letter-spacing:.08em;
+  padding:4px 10px;border-radius:100px;color:var(--dim);
+  border:1px solid var(--line);background:rgba(255,255,255,.02);
+}
+.card-num{
+  position:absolute;top:22px;right:26px;font-family:var(--f-mono);
+  font-size:.7rem;color:var(--dim);letter-spacing:.1em;z-index:1;
+}
+
+/* ============================================================
+   14. WORK / PORTFOLIO
+   ============================================================ */
+.filters{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:44px}
+.filter{
+  padding:9px 22px;border-radius:100px;font-size:.8rem;font-weight:500;
+  color:var(--muted);border:1px solid var(--line);
+  transition:.35s var(--ease);font-family:var(--f-mono);letter-spacing:.05em;
+}
+.filter:hover{color:var(--txt);border-color:var(--line-hi)}
+.filter.active{background:var(--grad-soft);border-color:rgba(139,92,246,.5);color:var(--txt);box-shadow:0 0 22px rgba(139,92,246,.22)}
+
+.work-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:22px}
+.work-item{
+  position:relative;border-radius:var(--radius);overflow:hidden;
+  border:1px solid var(--line);aspect-ratio:4/3;
+  display:flex;align-items:flex-end;
+  transition:.6s var(--ease);
+  background:#0a0a13;
+}
+.work-item.hide{display:none}
+.work-item:hover{transform:translateY(-8px);border-color:var(--line-hi)}
+.work-bg{
+  position:absolute;inset:0;
+  background:linear-gradient(140deg,var(--c1),var(--c2));
+  opacity:.5;transition:.7s var(--ease);
+}
+.work-bg::after{
+  content:"";position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);
+  background-size:34px 34px;
+}
+.work-item:hover .work-bg{opacity:.85;transform:scale(1.06)}
+.work-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(180deg,transparent 28%,rgba(4,4,9,.94) 92%);
+}
+.work-content{position:relative;z-index:2;padding:30px}
+.work-cat{
+  display:inline-block;font-family:var(--f-mono);font-size:.66rem;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--accent-2);margin-bottom:10px;
+}
+.work-content h3{font-family:var(--f-display);font-size:1.18rem;font-weight:700;margin-bottom:8px}
+.work-content p{color:var(--muted);font-size:.86rem;max-width:88%;
+  opacity:0;max-height:0;transition:.5s var(--ease);overflow:hidden}
+.work-item:hover .work-content p{opacity:1;max-height:80px;margin-top:6px}
+.work-arrow{
+  position:absolute;top:24px;right:24px;width:42px;height:42px;border-radius:50%;
+  display:grid;place-content:center;z-index:2;
+  background:rgba(0,0,0,.4);border:1px solid var(--line-hi);backdrop-filter:blur(10px);
+  opacity:0;transform:translate(8px,-8px) rotate(-45deg);transition:.45s var(--ease);
+}
+.work-item:hover .work-arrow{opacity:1;transform:translate(0,0) rotate(0)}
+
+/* ============================================================
+   15. TEAM
+   ============================================================ */
+.team-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:22px}
+.member{
+  position:relative;text-align:center;padding:40px 26px;border-radius:var(--radius);
+  border:1px solid var(--line);background:var(--panel);overflow:hidden;
+  transition:.5s var(--ease);
+}
+.member::after{
+  content:"";position:absolute;left:0;right:0;bottom:0;height:2px;
+  background:var(--grad);transform:scaleX(0);transform-origin:left;
+  transition:transform .5s var(--ease);
+}
+.member:hover{transform:translateY(-8px);background:var(--panel-hi);border-color:var(--line-hi)}
+.member:hover::after{transform:scaleX(1)}
+.avatar{
+  width:84px;height:84px;margin:0 auto 20px;border-radius:50%;
+  display:grid;place-content:center;
+  font-family:var(--f-display);font-weight:800;font-size:1.35rem;color:#fff;
+  background:linear-gradient(140deg,var(--c1),var(--c2));
+  border:1px solid rgba(255,255,255,.12);
+  box-shadow:0 0 0 6px rgba(255,255,255,.025);
+  transition:.5s var(--ease);
+}
+.member:hover .avatar{transform:scale(1.07);box-shadow:0 0 0 8px rgba(139,92,246,.12),var(--glow)}
+.member h4{font-family:var(--f-display);font-size:.98rem;font-weight:700;letter-spacing:.03em;margin-bottom:6px}
+.member .role{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.12em;color:var(--accent-2);text-transform:uppercase}
+.member .bio{color:var(--muted);font-size:.83rem;margin-top:14px}
+.socials{display:flex;justify-content:center;gap:10px;margin-top:18px}
+.socials a{
+  width:32px;height:32px;border-radius:9px;display:grid;place-content:center;
+  border:1px solid var(--line);color:var(--muted);transition:.35s var(--ease);
+}
+.socials a:hover{color:var(--accent-2);border-color:var(--accent-2);transform:translateY(-3px)}
+.socials svg{width:14px;height:14px}
+
+/* ============================================================
+   16. TESTIMONIALS
+   ============================================================ */
+.slider{position:relative;overflow:hidden;border-radius:var(--radius)}
+.slider-track{display:flex;transition:transform .7s var(--ease)}
+.slide{min-width:100%;padding:56px 52px;border:1px solid var(--line);border-radius:var(--radius);
+  background:var(--panel);backdrop-filter:blur(12px)}
+@media(max-width:600px){.slide{padding:36px 26px}}
+.quote-mark{font-family:var(--f-display);font-size:3.4rem;line-height:1;color:var(--accent);opacity:.35;margin-bottom:8px}
+.slide blockquote{font-size:clamp(1rem,2.2vw,1.28rem);line-height:1.7;color:#d6d9ea;margin-bottom:30px;font-weight:300}
+.slide-author{display:flex;align-items:center;gap:16px}
+.slide-author .av{
+  width:48px;height:48px;border-radius:50%;display:grid;place-content:center;
+  font-family:var(--f-display);font-weight:700;font-size:.9rem;color:#fff;
+  background:linear-gradient(140deg,var(--c1),var(--c2));
+}
+.slide-author strong{display:block;font-size:.92rem}
+.slide-author span{font-family:var(--f-mono);font-size:.72rem;color:var(--dim);letter-spacing:.08em}
+
+.slider-nav{display:flex;justify-content:center;gap:10px;margin-top:30px}
+.slider-nav button{
+  width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.14);
+  transition:.4s var(--ease);
+}
+.slider-nav button.active{width:30px;border-radius:100px;background:var(--grad);box-shadow:0 0 16px rgba(139,92,246,.6)}
+
+/* ============================================================
+   17. CONTACT
+   ============================================================ */
+.contact-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:56px}
+@media(max-width:960px){.contact-grid{grid-template-columns:1fr;gap:44px}}
+
+.contact-info{display:grid;gap:18px;align-content:start}
+.info-card{
+  display:flex;gap:18px;align-items:flex-start;padding:22px;
+  border-radius:var(--radius-sm);border:1px solid var(--line);background:var(--panel);
+  transition:.4s var(--ease);
+}
+.info-card:hover{border-color:var(--line-hi);background:var(--panel-hi);transform:translateX(6px)}
+.info-card .ico{
+  width:42px;height:42px;flex:0 0 42px;border-radius:11px;display:grid;place-content:center;
+  background:var(--grad-soft);border:1px solid rgba(139,92,246,.3);color:var(--accent-2);
+}
+.info-card .ico svg{width:18px;height:18px}
+.info-card h5{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);margin-bottom:5px}
+.info-card p{font-size:.92rem;color:#c8ccdd}
+
+form{
+  padding:40px;border-radius:var(--radius);
+  border:1px solid var(--line);background:var(--panel);backdrop-filter:blur(14px);
+}
+@media(max-width:600px){form{padding:26px}}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media(max-width:600px){.form-row{grid-template-columns:1fr}}
+.field{position:relative;margin-bottom:20px}
+.field label{
+  display:block;font-family:var(--f-mono);font-size:.68rem;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--dim);margin-bottom:9px;
+}
+.field input,.field textarea,.field select{
+  width:100%;padding:14px 16px;border-radius:12px;
+  background:rgba(0,0,0,.35);border:1px solid var(--line);
+  color:var(--txt);font-size:.92rem;
+  transition:.35s var(--ease);
+}
+.field textarea{resize:vertical;min-height:130px}
+.field input:focus,.field textarea:focus,.field select:focus{
+  border-color:var(--accent);background:rgba(139,92,246,.06);
+  box-shadow:0 0 0 4px rgba(139,92,246,.1);
+}
+.field input::placeholder,.field textarea::placeholder{color:#4a4f66}
+.field.error input,.field.error textarea{border-color:var(--accent-3);box-shadow:0 0 0 4px rgba(255,45,117,.1)}
+.err-msg{font-family:var(--f-mono);font-size:.68rem;color:var(--accent-3);margin-top:7px;display:none}
+.field.error .err-msg{display:block}
+
+.form-status{
+  margin-top:20px;padding:14px 18px;border-radius:12px;font-size:.88rem;display:none;
+  border:1px solid rgba(34,255,136,.35);background:rgba(34,255,136,.08);color:var(--accent-4);
+}
+.form-status.show{display:block;animation:fadeUp .5s var(--ease)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+/* ============================================================
+   18. CTA BANNER
+   ============================================================ */
+.cta-banner{
+  position:relative;overflow:hidden;text-align:center;
+  padding:80px 40px;border-radius:26px;
+  border:1px solid rgba(139,92,246,.3);
+  background:radial-gradient(700px circle at 50% 0%,rgba(139,92,246,.2),transparent 68%),rgba(255,255,255,.02);
+}
+.cta-banner h2{
+  font-family:var(--f-display);font-weight:900;
+  font-size:clamp(1.6rem,4.4vw,3rem);line-height:1.14;margin-bottom:18px;
+}
+.cta-banner p{color:var(--muted);max-width:560px;margin:0 auto 34px}
+
+/* ============================================================
+   19. FOOTER
+   ============================================================ */
+footer{
+  position:relative;z-index:3;border-top:1px solid var(--line);
+  padding:70px 0 30px;background:rgba(0,0,0,.35);
+}
+.foot-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1.4fr;gap:44px;margin-bottom:56px}
+@media(max-width:900px){.foot-grid{grid-template-columns:1fr 1fr;gap:38px}}
+@media(max-width:560px){.foot-grid{grid-template-columns:1fr}}
+
+.foot-brand p{color:var(--muted);font-size:.9rem;margin:18px 0 22px;max-width:320px}
+.foot-col h5{
+  font-family:var(--f-mono);font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--dim);margin-bottom:20px;
+}
+.foot-col ul{display:grid;gap:12px}
+.foot-col a{color:var(--muted);font-size:.9rem;transition:.3s var(--ease);display:inline-block}
+.foot-col a:hover{color:var(--accent-2);transform:translateX(5px)}
+
+.newsletter{display:flex;gap:8px;margin-top:16px}
+.newsletter input{
+  flex:1;padding:12px 16px;border-radius:100px;font-size:.85rem;
+  background:rgba(0,0,0,.4);border:1px solid var(--line);color:var(--txt);
+  transition:.35s var(--ease);min-width:0;
+}
+.newsletter input:focus{border-color:var(--accent);box-shadow:0 0 0 4px rgba(139,92,246,.1)}
+.newsletter button{
+  padding:12px 20px;border-radius:100px;background:var(--grad);color:#05050a;
+  font-weight:700;font-size:.82rem;transition:.35s var(--ease);
+}
+.newsletter button:hover{transform:translateY(-2px);box-shadow:var(--glow)}
+
+.foot-bottom{
+  display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;
+  padding-top:28px;border-top:1px solid var(--line);
+  font-family:var(--f-mono);font-size:.74rem;color:var(--dim);letter-spacing:.05em;
+}
+.foot-bottom .made{display:flex;align-items:center;gap:8px}
+.foot-bottom .made b{color:var(--accent-3)}
+
+/* ============================================================
+   20. REDUCED MOTION
+   ============================================================ */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important}
+  html{scroll-behavior:auto}
+  .reveal{opacity:1;transform:none}
+}
+</style>
+</head>
+
+<body>
+
+<!-- ============ PRELOADER ============ -->
+<div id="preloader">
+  <div class="pre-logo">C.O.D</div>
+  <div class="pre-bar"><span></span></div>
+  <p class="pre-text">Initializing darkness…</p>
+</div>
+
+<!-- ============ BACKDROP ============ -->
+<canvas id="bg"></canvas>
+<div class="grid-overlay"></div>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="noise"></div>
+
+<!-- ============ CURSOR + PROGRESS ============ -->
+<div class="cursor-ring" id="cursorRing"></div>
+<div class="cursor-dot" id="cursorDot"></div>
+<div id="progress"></div>
+
+<!-- ============ NAV ============ -->
+<header class="nav" id="nav">
+  <div class="container nav-inner">
+    <a href="#home" class="logo" data-cursor>
+      <span class="logo-mark">◈</span>
+      <span class="logo-text">CODE<span>·</span>DARKNESS</span>
+    </a>
+
+    <nav class="nav-links" id="navLinks">
+      <a href="#home">Home</a>
+      <a href="#about">About</a>
+      <a href="#services">Services</a>
+      <a href="#work">Work</a>
+      <a href="#team">Team</a>
+      <a href="#contact" class="nav-cta">Join Us</a>
+    </nav>
+
+    <button class="burger" id="burger" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main>
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="home">
+  <div class="container hero-inner">
+
+    <div class="hero-badge reveal">
+      <span class="dot"></span> EST. 2019 · BUILDING IN THE SHADOWS
+    </div>
+
+    <h1 class="reveal">
+      <span class="line">CODE OF</span>
+      <span class="line glitch" data-text="DARKNESS">DARKNESS</span>
+    </h1>
+
+    <div class="typed-wrap reveal">
+      <span id="typed"></span><span class="caret"></span>
+    </div>
+
+    <p class="lead reveal">
+      We are an elite collective of engineers, designers and security researchers
+      who architect resilient systems. No noise. No ego. Just code that survives
+      the dark.
+    </p>
+
+    <div class="hero-actions reveal">
+      <a href="#work" class="btn btn-primary" data-cursor>
+        View Our Work
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+      <a href="#contact" class="btn btn-ghost" data-cursor>
+        Start a Project
+      </a>
+    </div>
+
+    <div class="hero-strip reveal">
+      <span>Zero Trust</span>
+      <span>Cloud Native</span>
+      <span>Open Source</span>
+      <span>24/7 Ops</span>
+    </div>
+  </div>
+
+  <div class="scroll-cue">
+    <span>Scroll</span>
+    <div class="rail"></div>
+  </div>
+</section>
+
+<!-- ============ MARQUEE ============ -->
+<div class="marquee">
+  <div class="marquee-track" id="marquee">
+    <div class="marquee-item">Penetration Testing</div>
+    <div class="marquee-item">Distributed Systems</div>
+    <div class="marquee-item">AI Engineering</div>
+    <div class="marquee-item">Cloud Architecture</div>
+    <div class="marquee-item">Zero-Day Research</div>
+    <div class="marquee-item">Product Design</div>
+    <div class="marquee-item">Penetration Testing</div>
+    <div class="marquee-item">Distributed Systems</div>
+    <div class="marquee-item">AI Engineering</div>
+    <div class="marquee-item">Cloud Architecture</div>
+    <div class="marquee-item">Zero-Day Research</div>
+    <div class="marquee-item">Product Design</div>
+  </div>
+</div>
+
+<!-- ============ ABOUT ============ -->
+<section id="about">
+  <div class="container">
+    <div class="about-grid">
+
+      <div class="about-copy reveal">
+        <span class="eyebrow">About the collective</span>
+        <h2>We don't follow trends.<br><span class="grad-text">We build what lasts.</span></h2>
+        <p>
+          Code of Darkness started as six engineers in a basement with one rule:
+          ship things that work when everything else fails. Seven years later we're
+          a distributed collective across 18 countries — still operating by that rule.
+        </p>
+        <p>
+          We take on the problems other teams run from: legacy migrations nobody
+          wants to touch, infrastructure that has to survive an audit, ML systems
+          that need to be explainable, not just accurate.
+        </p>
+
+        <ul class="about-list">
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+            Security-first architecture from line one
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+            Senior-only engineering teams — no handoffs
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+            Transparent async process, weekly shipped increments
+          </li>
+        </ul>
+
+        <a href="#services" class="btn btn-ghost" data-cursor>What we do</a>
+      </div>
+
+      <div class="terminal reveal">
+        <div class="terminal-bar">
+          <i></i><i></i><i></i>
+          <span>cod@darkness: ~/core</span>
+        </div>
+        <div class="terminal-body">
+<span class="c-com">// manifest.ts — our operating principles</span><br>
+<span class="c-key">export const</span> <span class="c-fn">CodeOfDarkness</span> = {<br>
+&nbsp;&nbsp;founded: <span class="c-str">2019</span>,<br>
+&nbsp;&nbsp;engineers: <span class="c-str">45</span>,<br>
+&nbsp;&nbsp;countries: <span class="c-str">18</span>,<br>
+&nbsp;&nbsp;principles: [<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="c-str">"security by default"</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="c-str">"ship small, ship often"</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="c-str">"no dark patterns — just dark mode"</span><br>
+&nbsp;&nbsp;],<br>
+&nbsp;&nbsp;<span class="c-fn">deploy</span>: () => <span class="c-str">"when it's ready"</span><br>
+};
+        </div>
+      </div>
+
+    </div>
+
+    <!-- STATS -->
+    <div class="stats reveal">
+      <div class="stat">
+        <h3 data-count="148" data-suffix="+">0</h3>
+        <p>Projects Shipped</p>
+      </div>
+      <div class="stat">
+        <h3 data-count="45" data-suffix="">0</h3>
+        <p>Engineers</p>
+      </div>
+      <div class="stat">
+        <h3 data-count="18" data-suffix="">0</h3>
+        <p>Countries</p>
+      </div>
+      <div class="stat">
+        <h3 data-count="99" data-suffix=".98%">0</h3>
+        <p>Uptime SLA</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SERVICES ============ -->
+<section id="services">
+  <div class="container">
+    <div class="section-head center reveal">
+      <span class="eyebrow">Capabilities</span>
+      <h2>What we <span class="grad-text">actually</span> do</h2>
+      <p>Six disciplines. One standard. Every engagement is led by a senior engineer who owns the outcome.</p>
+    </div>
+
+    <div class="cards">
+
+      <article class="card reveal" data-tilt>
+        <span class="card-num">01</span>
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6 2 12l6 6M16 6l6 6-6 6"/></svg>
+        </div>
+        <h3>Web Engineering</h3>
+        <p>High-performance applications built on modern stacks. Sub-second loads, accessible by default, tested to the edge.</p>
+        <div class="tags"><span>Next.js</span><span>TypeScript</span><span>Edge</span></div>
+      </article>
+
+      <article class="card reveal" data-tilt>
+        <span class="card-num">02</span>
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="8" height="8" rx="2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5.6 5.6 7.7 7.7M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/></svg>
+        </div>
+        <h3>AI &amp; Machine Learning</h3>
+        <p>From RAG pipelines to production model serving. We build ML that's measurable, monitorable and explainable.</p>
+        <div class="tags"><span>PyTorch</span><span>LLM Ops</span><span>Vector DB</span></div>
+      </article>
+
+      <article class="card reveal" data-tilt>
+        <span class="card-num">03</span>
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.6-3 7.6-7 9-4-1.4-7-4.4-7-9V6l7-3z"/><path d="M9.5 12l1.8 1.8 3.4-3.6"/></svg>
+        </div>
+        <h3>Cybersecurity</h3>
+        <p>Offensive and defensive work: red-team engagements, threat modelling, zero-trust rollouts and incident response.</p>
+        <div class="tags"><span>Pentest</span><span>Zero Trust</span><span>IR</span></div>
+      </article>
+
+      <article class="card reveal" data-tilt>
+        <span class="card-num">04</span>
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18h10a4 4 0 0 0 .7-7.94A6 6 0 0 0 6 9.6 3.5 3.5 0 0 0 7 18z"/></svg>
+        </div>
+        <h3>Cloud &amp; DevOps</h3>
+        <p>Infrastructure as code, immutable deploys, cost engineering. Your platform should be boring — in the best way.</p>
+        <div class="tags"><span>Kubernetes</span><span>Terraform</span><span>AWS</span></div>
+      </article>
+
+      <article class="card reveal" data-tilt>
+        <span class="card-num">05</span>
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="6.5" y="2.5" width="11" height="19" rx="2.6"/><path d="M11 18.5h2"/></svg>
+        </div>
+        <h3>Mobile Apps</h3>
+        <p>Native and cross-platform products that feel instant. Offline-first architecture, app-store ready, analytics wired in.</p>
+        <div class="tags"><span>React Native</span><span>Swift</span><span>Kotlin</span></div>
+      </article>
+
+      <article class="card reveal" data-tilt>
+        <span class="card-num">06</span>
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v12c0 1.66 3.13 3 7 3s7-1.34 7-3V6"/><path d="M5 12c0 1.66 3.13 3 7 3s7-1.34 7-3"/></svg>
+        </div>
+        <h3>Data Engineering</h3>
+        <p>Streaming pipelines, warehouses and governance. Turn raw events into decisions your team actually trusts.</p>
+        <div class="tags"><span>Kafka</span><span>dbt</span><span>Snowflake</span></div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ WORK ============ -->
+<section id="work">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Selected work</span>
+      <h2>Things we built <span class="grad-text">after dark</span></h2>
+      <p>A small sample of engagements. Most of our work lives behind NDAs and private repos — the rest looks like this.</p>
+    </div>
+
+    <div class="filters reveal" id="filters">
+      <button class="filter active" data-filter="all">All</button>
+      <button class="filter" data-filter="web">Web</button>
+      <button class="filter" data-filter="ai">AI / ML</button>
+      <button class="filter" data-filter="security">Security</button>
+      <button class="filter" data-filter="cloud">Cloud</button>
+    </div>
+
+    <div class="work-grid" id="workGrid">
+
+      <article class="work-item reveal" data-cat="security" style="--c1:#4c1d95;--c2:#0e7490">
+        <div class="work-bg"></div>
+        <div class="work-overlay"></div>
+        <div class="work-arrow">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg>
+        </div>
+        <div class="work-content">
+          <span class="work-cat">Security</span>
+          <h3>Blackout Perimeter</h3>
+          <p>Zero-trust overhaul for a fintech handling 4M+ daily transactions across 9 regions.</p>
+        </div>
+      </article>
+
+      <article class="work-item reveal" data-cat="ai" style="--c1:#7c2d12;--c2:#6d28d9">
+        <div class="work-bg"></div>
+        <div class="work-overlay"></div>
+        <div class="work-arrow">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg>
+        </div>
+        <div class="work-content">
+          <span class="work-cat">AI / ML</span>
+          <h3>Oracle RAG Engine</h3>
+          <p>Retrieval pipeline over 12M documents with sub-200ms p95 latency and full citation tracing.</p>
+        </div>
+      </article>
+
+      <article class="work-item reveal" data-cat="web" style="--c1:#0f766e;--c2:#1e3a8a">
+        <div class="work-bg"></div>
+        <div class="work-overlay"></div>
+        <div class="work-arrow">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg>
+        </div>
+        <div class="work-content">
+          <span class="work-cat">Web</span>
+          <h3>Nightfall Commerce</h3>
+          <p>Headless storefront rewrite — 1.2s LCP on 3G, +38% conversion in the first quarter.</p>
+        </div>
+      </article>
+
+      <article class="work-item reveal" data-cat="cloud" style="--c1:#312e81;--c2:#0f766e">
+        <div class="work-bg"></div>
+        <div class="work-overlay"></div>
+        <div class="work-arrow">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg>
+        </div>
+        <div class="work-content">
+          <span class="work-cat">Cloud</span>
+          <h3>Umbral Platform</h3>
+          <p>Multi-region Kubernetes migration that cut infra spend by 41% with zero downtime.</p>
+        </div>
+      </article>
+
+      <article class="work-item reveal" data-cat="ai" style="--c1:#581c87;--c2:#be123c">
+        <div class="work-bg"></div>
+        <div class="work-overlay"></div>
+        <div class="work-arrow">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg>
+        </div>
+        <div class="work-content">
+          <span class="work-cat">AI / ML</span>
+          <h3>Sentinel Anomaly</h3>
+          <p>Real-time fraud detection scoring 90k events/sec with a 0.4% false-positive rate.</p>
+        </div>
+      </article>
+
+      <article class="work-item reveal" data-cat="web" style="--c1:#1e40af;--c2:#7c3aed">
+        <div class="work-bg"></div>
+        <div class="work-overlay"></div>
+        <div class="work-arrow">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg>
+        </div>
+        <div class="work-content">
+          <span class="work-cat">Web</span>
+          <h3>Eclipse Design System</h3>
+          <p>140+ accessible components adopted by 11 product teams across the organisation.</p>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ TEAM ============ -->
+<section id="team">
+  <div class="container">
+    <div class="section-head center reveal">
+      <span class="eyebrow">The collective</span>
+      <h2>People behind the <span class="grad-text">terminal</span></h2>
+      <p>No managers-of-managers. Everyone here writes code, reviews code, and owns outcomes.</p>
+    </div>
+
+    <div class="team-grid">
+
+      <article class="member reveal" style="--c1:#8b5cf6;--c2:#00e5ff">
+        <div class="avatar">NV</div>
+        <h4>Nadia Vasquez</h4>
+        <span class="role">Founder / Systems</span>
+        <p class="bio">Distributed systems architect. Previously scaled a payments ledger to 40B events.</p>
+        <div class="socials">
+          <a href="#" aria-label="GitHub"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2A10 10 0 0 0 8.84 21.5c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.1-1.47-1.1-1.47-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02a9.5 9.5 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10 10 0 0 0 12 2z"/></svg></a>
+          <a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5A2.5 2.5 0 1 0 5 8.5a2.5 2.5 0 0 0-.02-5zM3 9h4v12H3zM9 9h3.8v1.7h.05c.53-1 1.83-2.05 3.77-2.05C20.4 8.65 21 11.1 21 14.2V21h-4v-6c0-1.43-.03-3.28-2-3.28-2 0-2.3 1.56-2.3 3.17V21H9z"/></svg></a>
+        </div>
+      </article>
+
+      <article class="member reveal" style="--c1:#ff2d75;--c2:#8b5cf6">
+        <div class="avatar">KO</div>
+        <h4>Kaito Okonkwo</h4>
+        <span class="role">Head of Security</span>
+        <p class="bio">Offensive security lead. 60+ CVEs credited, ex-red team for a national bank.</p>
+        <div class="socials">
+          <a href="#" aria-label="GitHub"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2A10 10 0 0 0 8.84 21.5c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.1-1.47-1.1-1.47-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02a9.5 9.5 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10 10 0 0 0 12 2z"/></svg></a>
+          <a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5A2.5 2.5 0 1 0 5 8.5a2.5 2.5 0 0 0-.02-5zM3 9h4v12H3zM9 9h3.8v1.7h.05c.53-1 1.83-2.05 3.77-2.05C20.4 8.65 21 11.1 21 14.2V21h-4v-6c0-1.43-.03-3.28-2-3.28-2 0-2.3 1.56-2.3 3.17V21H9z"/></svg></a>
+        </div>
+      </article>
+
+      <article class="member reveal" style="--c1:#00e5ff;--c2:#22ff88">
+        <div class="avatar">LM</div>
+        <h4>Lena Morgenstern</h4>
+        <span class="role">ML Engineering</span>
+        <p class="bio">Builds production ML that survives contact with real users. Ex-research, now shipping.</p>
+        <div class="socials">
+          <a href="#" aria-label="GitHub"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2A10 10 0 0 0 8.84 21.5c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.1-1.47-1.1-1.47-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02a9.5 9.5 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10 10 0 0 0 12 2z"/></svg></a>
+          <a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5A2.5 2.5 0 1 0 5 8.5a2.5 2.5 0 0 0-.02-5zM3 9h4v12H3zM9 9h3.8v1.7h.05c.53-1 1.83-2.05 3.77-2.05C20.4 8.65 21 11.1 21 14.2V21h-4v-6c0-1.43-.03-3.28-2-3.28-2 0-2.3 1.56-2.3 3.17V21H9z"/></svg></a>
+        </div>
+      </article>
+
+      <article class="member reveal" style="--c1:#22ff88;--c2:#8b5cf6">
+        <div class="avatar">DA</div>
+        <h4>Dmitri Arslan</h4>
+        <span class="role">Cloud &amp; Platform</span>
+        <p class="bio">Terraform whisperer. Has migrated more legacy monoliths than he cares to remember.</p>
+        <div class="socials">
+          <a href="#" aria-label="GitHub"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2A10 10 0 0 0 8.84 21.5c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.1-1.47-1.1-1.47-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02a9.5 9.5 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10 10 0 0 0 12 2z"/></svg></a>
+          <a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5A2.5 2.5 0 1 0 5 8.5a2.5 2.5 0 0 0-.02-5zM3 9h4v12H3zM9 9h3.8v1.7h.05c.53-1 1.83-2.05 3.77-2.05C20.4 8.65 21 11.1 21 14.2V21h-4v-6c0-1.43-.03-3.28-2-3.28-2 0-2.3 1.56-2.3 3.17V21H9z"/></svg></a>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ TESTIMONIALS ============ -->
+<section id="voices">
+  <div class="container">
+    <div class="section-head center reveal">
+      <span class="eyebrow">Voices</span>
+      <h2>What partners <span class="grad-text">say</span></h2>
+    </div>
+
+    <div class="slider reveal">
+      <div class="slider-track" id="sliderTrack">
+
+        <div class="slide">
+          <div class="quote-mark">“</div>
+          <blockquote>
+            They found three critical vulnerabilities our previous auditors missed entirely,
+            then rebuilt the auth layer without a single minute of downtime. The most
+            competent team we've worked with.
+          </blockquote>
+          <div class="slide-author">
+            <div class="av" style="--c1:#8b5cf6;--c2:#00e5ff">AR</div>
+            <div>
+              <strong>Amara Reyes</strong>
+              <span>CTO · Northwind Financial</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="slide">
+          <div class="quote-mark">“</div>
+          <blockquote>
+            We handed them a nine-year-old monolith and a hard deadline. They shipped a
+            modular platform in fourteen weeks and our deploy time went from 40 minutes
+            to 90 seconds.
+          </blockquote>
+          <div class="slide-author">
+            <div class="av" style="--c1:#ff2d75;--c2:#8b5cf6">JT</div>
+            <div>
+              <strong>Jonas Thorne</strong>
+              <span>VP Engineering · Helix Logistics</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="slide">
+          <div class="quote-mark">“</div>
+          <blockquote>
+            Their ML team didn't just hand us a model — they handed us a system we could
+            actually operate, monitor and explain to regulators. That's rare.
+          </blockquote>
+          <div class="slide-author">
+            <div class="av" style="--c1:#22ff88;--c2:#00e5ff">SK</div>
+            <div>
+              <strong>Sofia Kowalski</strong>
+              <span>Head of Data · Meridian Health</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="slider-nav" id="sliderNav"></div>
+  </div>
+</section>
+
+<!-- ============ CONTACT ============ -->
+<section id="contact">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Get in touch</span>
+      <h2>Let's build something<br><span class="grad-text">worth hiding</span></h2>
+      <p>Tell us about the problem. We reply to every serious enquiry within 24 hours.</p>
+    </div>
+
+    <div class="contact-grid">
+
+      <div class="contact-info reveal">
+        <div class="info-card">
+          <div class="ico">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="4.5" width="19" height="15" rx="2.5"/><path d="m3 7 9 6 9-6"/></svg>
+          </div>
+          <div>
+            <h5>Email</h5>
+            <p>hello@codeofdarkness.dev</p>
+          </div>
+        </div>
+
+        <div class="info-card">
+          <div class="ico">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-5.4 7-11a7 7 0 1 0-14 0c0 5.6 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/></svg>
+          </div>
+          <div>
+            <h5>Distributed HQ</h5>
+            <p>Lisbon · Lagos · Tokyo · Toronto</p>
+          </div>
+        </div>
+
+        <div class="info-card">
+          <div class="ico">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 1.9"/></svg>
+          </div>
+          <div>
+            <h5>Response Time</h5>
+            <p>Under 24 hours, every weekday</p>
+          </div>
+        </div>
+
+        <div class="info-card">
+          <div class="ico">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.6-3 7.6-7 9-4-1.4-7-4.4-7-9V6l7-3z"/></svg>
+          </div>
+          <div>
+            <h5>PGP Available</h5>
+            <p>Fingerprint on request — for sensitive briefs</p>
+          </div>
+        </div>
+      </div>
+
+      <form id="contactForm" class="reveal" novalidate>
+        <div class="form-row">
+          <div class="field">
+            <label for="name">Your name</label>
+            <input type="text" id="name" name="name" placeholder="Ada Lovelace" required />
+            <span class="err-msg">Please enter your name.</span>
+          </div>
+          <div class="field">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="you@company.com" required />
+            <span class="err-msg">Please enter a valid email address.</span>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="subject">What do you need?</label>
+          <select id="subject" name="subject">
+            <option value="web">Web Engineering</option>
+            <option value="ai">AI &amp; Machine Learning</option>
+            <option value="security">Cybersecurity</option>
+            <option value="cloud">Cloud &amp; DevOps</option>
+            <option value="mobile">Mobile Apps</option>
+            <option value="data">Data Engineering</option>
+            <option value="other">Something else</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="message">Brief</label>
+          <textarea id="message" name="message" placeholder="Tell us about the problem, the constraints and the timeline…" required></textarea>
+          <span class="err-msg">Please give us at least 20 characters.</span>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center" data-cursor>
+          Send Transmission
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+
+        <div class="form-status" id="formStatus">
+          ✓ Transmission received. We'll be in touch within 24 hours.
+        </div>
+      </form>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ CTA BANNER ============ -->
+<section style="padding-top:0">
+  <div class="container">
+    <div class="cta-banner reveal">
+      <span class="eyebrow" style="justify-content:center">Recruiting</span>
+      <h2>We're hiring <span class="grad-text">senior engineers</span></h2>
+      <p>If you've ever rewritten something at 3am because it deserved better — we should talk.</p>
+      <a href="#contact" class="btn btn-primary" data-cursor>
+        See Open Roles
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="container">
+
+    <div class="foot-grid">
+
+      <div class="foot-brand">
+        <a href="#home" class="logo">
+          <span class="logo-mark">◈</span>
+          <span class="logo-text">CODE<span>·</span>DARKNESS</span>
+        </a>
+        <p>An elite tech collective engineering secure, scalable systems for teams who can't afford to guess.</p>
+        <div class="socials" style="justify-content:flex-start">
+          <a href="#" aria-label="GitHub"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2A10 10 0 0 0 8.84 21.5c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.1-1.47-1.1-1.47-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02a9.5 9.5 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10 10 0 0 0 12 2z"/></svg></a>
+          <a href="#" aria-label="X"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.2 2H21l-6.6 7.5L22 22h-6.2l-4.8-6.3L5.5 22H2.7l7-8L2 2h6.3l4.3 5.7zm-1 18h1.6L7.9 3.7H6.2z"/></svg></a>
+          <a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5A2.5 2.5 0 1 0 5 8.5a2.5 2.5 0 0 0-.02-5zM3 9h4v12H3zM9 9h3.8v1.7h.05c.53-1 1.83-2.05 3.77-2.05C20.4 8.65 21 11.1 21 14.2V21h-4v-6c0-1.43-.03-3.28-2-3.28-2 0-2.3 1.56-2.3 3.17V21H9z"/></svg></a>
+        </div>
+      </div>
+
+      <div class="foot-col">
+        <h5>Company</h5>
+        <ul>
+          <li><a href="#about">About</a></li>
+          <li><a href="#team">Team</a></li>
+          <li><a href="#work">Work</a></li>
+          <li><a href="#contact">Careers</a></li>
+        </ul>
+      </div>
+
+      <div class="foot-col">
+        <h5>Services</h5>
+        <ul>
+          <li><a href="#services">Web Engineering</a></li>
+          <li><a href="#services">AI &amp; ML</a></li>
+          <li><a href="#services">Cybersecurity</a></li>
+          <li><a href="#services">Cloud &amp; DevOps</a></li>
+        </ul>
+      </div>
+
+      <div class="foot-col">
+        <h5>Stay in the dark</h5>
+        <p style="color:var(--muted);font-size:.87rem">Occasional notes on engineering. No spam, ever.</p>
+        <form class="newsletter" id="newsletterForm">
+          <input type="email" placeholder="your@email.com" aria-label="Email" required />
+          <button type="submit">Join</button>
+        </form>
+        <p id="newsStatus" style="font-family:var(--f-mono);font-size:.7rem;color:var(--accent-4);margin-top:10px;display:none">✓ Subscribed. Welcome to the dark.</p>
+      </div>
+
+    </div>
+
+    <div class="foot-bottom">
+      <span>© <span id="year"></span> Code of Darkness Collective. All rights reserved.</span>
+      <span class="made">Built in the shadows with <b>♥</b> and too much coffee</span>
+      <span>Privacy · Terms · Security.txt</span>
+    </div>
+
+  </div>
+</footer>
+
+<!-- ============ BACK TO TOP ============ -->
+<button id="toTop" aria-label="Back to top" data-cursor>
+  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
+
+<script>
+/* ============================================================
+   CODE OF DARKNESS — MAIN SCRIPT
+   ============================================================ */
+(function () {
+  'use strict';
+
+  const $  = (s, c = document) => c.querySelector(s);
+  const $$ = (s, c = document) => [...c.querySelectorAll(s)];
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- 1. PRELOADER ---------- */
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      $('#preloader').classList.add('done');
+      document.body.classList.remove('lock');
+    }, 700);
+  });
+  document.body.classList.add('lock');
+
+  /* ---------- 2. YEAR ---------- */
+  $('#year').textContent = new Date().getFullYear();
+
+  /* ---------- 3. PARTICLE CANVAS ---------- */
+  (function particles() {
+    const canvas = $('#bg');
+    const ctx = canvas.getContext('2d');
+    let W, H, dpr, nodes = [], raf;
+    const mouse = { x: null, y: null };
+
+    const COLORS = ['rgba(139,92,246,', 'rgba(0,229,255,', 'rgba(255,255,255,'];
+
+    function init() {
+      const density = W < 700 ? 42 : W < 1200 ? 70 : 105;
+      nodes = Array.from({ length: density }, () => ({
+        x: Math.random() * W,
+        y: Math.random() * H,
+        vx: (Math.random() - 0.5) * 0.32,
+        vy: (Math.random() - 0.5) * 0.32,
+        r: Math.random() * 1.6 + 0.5,
+        c: COLORS[Math.floor(Math.random() * COLORS.length)]
+      }));
+    }
+
+    function resize() {
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      W = window.innerWidth;
+      H = window.innerHeight;
+      canvas.width = W * dpr;
+      canvas.height = H * dpr;
+      canvas.style.width = W + 'px';
+      canvas.style.height = H + 'px';
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      init();
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, W, H);
+      const LINK = W < 700 ? 100 : 140;
+
+      for (let i = 0; i < nodes.length; i++) {
+        const n = nodes[i];
+        n.x += n.vx;
+        n.y += n.vy;
+
+        if (n.x < -40) n.x = W + 40;
+        if (n.x > W + 40) n.x = -40;
+        if (n.y < -40) n.y = H + 40;
+        if (n.y > H + 40) n.y = -40;
+
+        // mouse repel
+        if (mouse.x !== null) {
+          const dx = n.x - mouse.x, dy = n.y - mouse.y;
+          const d = Math.hypot(dx, dy);
+          if (d < 120 && d > 0.1) {
+            n.x += (dx / d) * 0.6;
+            n.y += (dy / d) * 0.6;
+          }
+        }
+
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+        ctx.fillStyle = n.c + '0.7)';
+        ctx.fill();
+
+        for (let j = i + 1; j < nodes.length; j++) {
+          const m = nodes[j];
+          const dx = n.x - m.x, dy = n.y - m.y;
+          const dist = Math.hypot(dx, dy);
+          if (dist < LINK) {
+            ctx.beginPath();
+            ctx.moveTo(n.x, n.y);
+            ctx.lineTo(m.x, m.y);
+            ctx.strokeStyle = 'rgba(139,92,246,' + (0.18 * (1 - dist / LINK)) + ')';
+            ctx.lineWidth = 0.6;
+            ctx.stroke();
+          }
+        }
+      }
+      raf = requestAnimationFrame(draw);
+    }
+
+    resize();
+    if (!reduceMotion) draw();
+
+    let rt;
+    window.addEventListener('resize', () => {
+      clearTimeout(rt);
+      rt = setTimeout(resize, 180);
+    });
+    window.addEventListener('mousemove', (e) => {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+    });
+    window.addEventListener('mouseout', () => { mouse.x = mouse.y = null; });
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) cancelAnimationFrame(raf);
+      else if (!reduceMotion) raf = requestAnimationFrame(draw);
+    });
+  })();
+
+  /* ---------- 4. CUSTOM CURSOR ---------- */
+  (function cursor() {
+    if (window.matchMedia('(hover: none)').matches) return;
+    const dot = $('#cursorDot'), ring = $('#cursorRing');
+    let mx = window.innerWidth / 2, my = window.innerHeight / 2;
+    let rx = mx, ry = my;
+
+    window.addEventListener('mousemove', (e) => {
+      mx = e.clientX; my = e.clientY;
+      dot.style.transform = `translate(${mx - 3}px, ${my - 3}px)`;
+    });
+
+    (function loop() {
+      rx += (mx - rx) * 0.16;
+      ry += (my - ry) * 0.16;
+      const size = ring.offsetWidth / 2;
+      ring.style.transform = `translate(${rx - size}px, ${ry - size}px)`;
+      requestAnimationFrame(loop);
+    })();
+
+    const hoverables = 'a, button, [data-cursor], input, textarea, select, .card, .work-item';
+    document.addEventListener('mouseover', (e) => {
+      if (e.target.closest(hoverables)) ring.classList.add('hover');
+    });
+    document.addEventListener('mouseout', (e) => {
+      if (e.target.closest(hoverables)) ring.classList.remove('hover');
+    });
+    document.addEventListener('mouseleave', () => {
+      dot.style.opacity = ring.style.opacity = '0';
+    });
+    document.addEventListener('mouseenter', () => {
+      dot.style.opacity = ring.style.opacity = '1';
+    });
+  })();
+
+  /* ---------- 5. NAV ---------- */
+  (function nav() {
+    const nav = $('#nav');
+    const burger = $('#burger');
+    const links = $('#navLinks');
+    const anchors = $$('#navLinks a');
+
+    const onScroll = () => {
+      nav.classList.toggle('scrolled', window.scrollY > 40);
+
+      // active link
+      const pos = window.scrollY + 140;
+      let current = '';
+      $$('section[id]').forEach((sec) => {
+        if (pos >= sec.offsetTop) current = sec.id;
+      });
+      anchors.forEach((a) => {
+        a.classList.toggle('active', a.getAttribute('href') === '#' + current && !a.classList.contains('nav-cta'));
+      });
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    const closeMenu = () => {
+      burger.classList.remove('open');
+      links.classList.remove('open');
+      burger.setAttribute('aria-expanded', 'false');
+      document.body.classList.remove('lock');
+    };
+
+    burger.addEventListener('click', () => {
+      const open = links.classList.toggle('open');
+      burger.classList.toggle('open', open);
+      burger.setAttribute('aria-expanded', String(open));
+      document.body.classList.toggle('lock', open);
+    });
+
+    anchors.forEach((a) => a.addEventListener('click', closeMenu));
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMenu(); });
+  })();
+
+  /* ---------- 6. SCROLL PROGRESS + BACK TO TOP ---------- */
+  (function scrollUI() {
+    const bar = $('#progress');
+    const btn = $('#toTop');
+
+    const update = () => {
+      const h = document.documentElement.scrollHeight - window.innerHeight;
+      const p = h > 0 ? (window.scrollY / h) * 100 : 0;
+      bar.style.width = p + '%';
+      btn.classList.toggle('show', window.scrollY > 500);
+    };
+    window.addEventListener('scroll', update, { passive: true });
+    update();
+
+    btn.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
+    });
+  })();
+
+  /* ---------- 7. REVEAL ON SCROLL ---------- */
+  (function reveal() {
+    const els = $$('.reveal');
+    if (!('IntersectionObserver' in window)) {
+      els.forEach((el) => el.classList.add('in'));
+      return;
+    }
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          const siblings = [...entry.target.parentElement.children].filter((c) => c.classList.contains('reveal'));
+          const idx = siblings.indexOf(entry.target);
+          entry.target.style.transitionDelay = Math.min(idx * 90, 420) + 'ms';
+          entry.target.classList.add('in');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+
+    els.forEach((el) => io.observe(el));
+  })();
+
+  /* ---------- 8. COUNTERS ---------- */
+  (function counters() {
+    const nums = $$('[data-count]');
+    if (!nums.length) return;
+
+    const animate = (el) => {
+      const target = parseFloat(el.dataset.count);
+      const suffix = el.dataset.suffix || '';
+      const dur = 1800;
+      const start = performance.now();
+
+      const step = (now) => {
+        const p = Math.min((now - start) / dur, 1);
+        const eased = 1 - Math.pow(1 - p, 3);
+        el.textContent = Math.floor(target * eased) + suffix;
+        if (p < 1) requestAnimationFrame(step);
+        else el.textContent = target + suffix;
+      };
+      requestAnimationFrame(step);
+    };
+
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) { animate(e.target); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.5 });
+
+    nums.forEach((n) => io.observe(n));
+  })();
+
+  /* ---------- 9. TYPING EFFECT ---------- */
+  (function typing() {
+    const el = $('#typed');
+    if (!el) return;
+
+    const lines = [
+      '> we architect resilient systems',
+      '> we break things, then we harden them',
+      '> we ship in the dark',
+      '> we are Code of Darkness_'
+    ];
+
+    if (reduceMotion) { el.textContent = lines[0]; return; }
+
+    let li = 0, ci = 0, deleting = false;
+
+    function tick() {
+      const full = lines[li];
+      if (!deleting) {
+        el.textContent = full.slice(0, ++ci);
+        if (ci === full.length) {
+          deleting = true;
+          return setTimeout(tick, 1900);
+        }
+        setTimeout(tick, 52);
+      } else {
+        el.textContent = full.slice(0, --ci);
+        if (ci === 0) {
+          deleting = false;
+          li = (li + 1) % lines.length;
+          return setTimeout(tick, 380);
+        }
+        setTimeout(tick, 26);
+      }
+    }
+    setTimeout(tick, 900);
+  })();
+
+  /* ---------- 10. CARD SPOTLIGHT + TILT ---------- */
+  (function cards() {
+    $$('.card').forEach((card) => {
+      card.addEventListener('mousemove', (e) => {
+        const r = card.getBoundingClientRect();
+        card.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+        card.style.setProperty('--my', (e.clientY - r.top) + 'px');
+      });
+    });
+
+    if (reduceMotion || window.matchMedia('(hover: none)').matches) return;
+
+    $$('[data-tilt]').forEach((el) => {
+      el.addEventListener('mousemove', (e) => {
+        const r = el.getBoundingClientRect();
+        const px = (e.clientX - r.left) / r.width - 0.5;
+        const py = (e.clientY - r.top) / r.height - 0.5;
+        el.style.transform = `translateY(-8px) rotateX(${-py * 4}deg) rotateY(${px * 4}deg)`;
+      });
+      el.addEventListener('mouseleave', () => { el.style.transform = ''; });
+    });
+  })();
+
+  /* ---------- 11. WORK FILTER ---------- */
+  (function filter() {
+    const buttons = $$('.filter');
+    const items = $$('.work-item');
+
+    buttons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        buttons.forEach((b) => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        const f = btn.dataset.filter;
+        items.forEach((item) => {
+          const show = f === 'all' || item.dataset.cat === f;
+          item.classList.toggle('hide', !show);
+          if (show) {
+            item.style.animation = 'none';
+            void item.offsetWidth;
+            item.style.animation = 'fadeUp .5s cubic-bezier(.16,1,.3,1) both';
+          }
+        });
+      });
+    });
+  })();
+
+  /* ---------- 12. TESTIMONIAL SLIDER ---------- */
+  (function slider() {
+    const track = $('#sliderTrack');
+    const nav = $('#sliderNav');
+    if (!track) return;
+
+    const slides = $$('.slide', track);
+    let index = 0, timer;
+
+    slides.forEach((_, i) => {
+      const b = document.createElement('button');
+      b.setAttribute('aria-label', 'Go to testimonial ' + (i + 1));
+      b.addEventListener('click', () => go(i));
+      nav.appendChild(b);
+    });
+    const dots = $$('button', nav);
+
+    function go(i) {
+      index = (i + slides.length) % slides.length;
+      track.style.transform = `translateX(-${index * 100}%)`;
+      dots.forEach((d, k) => d.classList.toggle('active', k === index));
+      restart();
+    }
+
+    function restart() {
+      clearInterval(timer);
+      if (!reduceMotion) timer = setInterval(() => go(index + 1), 6500);
+    }
+
+    // swipe support
+    let startX = null;
+    track.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; }, { passive: true });
+    track.addEventListener('touchend', (e) => {
+      if (startX === null) return;
+      const dx = e.changedTouches[0].clientX - startX;
+      if (Math.abs(dx) > 50) go(index + (dx < 0 ? 1 : -1));
+      startX = null;
+    });
+
+    go(0);
+  })();
+
+  /* ---------- 13. CONTACT FORM ---------- */
+  (function form() {
+    const form = $('#contactForm');
+    if (!form) return;
+    const status = $('#formStatus');
+
+    const setError = (input, on) => input.closest('.field').classList.toggle('error', on);
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      let ok = true;
+
+      const name = $('#name');
+      const email = $('#email');
+      const message = $('#message');
+
+      if (!name.value.trim()) { setError(name, true); ok = false; } else setError(name, false);
+
+      const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.value.trim());
+      setError(email, !emailOk);
+      if (!emailOk) ok = false;
+
+      if (message.value.trim().length < 20) { setError(message, true); ok = false; } else setError(message, false);
+
+      if (!ok) { status.classList.remove('show'); return; }
+
+      const btn = form.querySelector('button[type="submit"]');
+      const original = btn.innerHTML;
+      btn.innerHTML = 'Transmitting…';
+      btn.disabled = true;
+
+      setTimeout(() => {
+        btn.innerHTML = original;
+        btn.disabled = false;
+        form.reset();
+        status.classList.add('show');
+        setTimeout(() => status.classList.remove('show'), 6000);
+      }, 1100);
+    });
+
+    // live clearing
+    $$('input, textarea', form).forEach((el) => {
+      el.addEventListener('input', () => setError(el, false));
+    });
+  })();
+
+  /* ---------- 14. NEWSLETTER ---------- */
+  (function newsletter() {
+    const f = $('#newsletterForm');
+    if (!f) return;
+    f.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const input = f.querySelector('input');
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(input.value.trim())) {
+        input.style.borderColor = 'var(--accent-3)';
+        return;
+      }
+      input.style.borderColor = '';
+      input.value = '';
+      $('#newsStatus').style.display = 'block';
+      setTimeout(() => { $('#newsStatus').style.display = 'none'; }, 5000);
+    });
+  })();
+
+  /* ---------- 15. SMOOTH ANCHORS (fallback) ---------- */
+  $$('a[href^="#"]').forEach((a) => {
+    a.addEventListener('click', (e) => {
+      const id = a.getAttribute('href');
+      if (id === '#' || id.length < 2) return;
+      const target = document.querySelector(id);
+      if (!target) return;
+      e.preventDefault();
+      const top = target.getBoundingClientRect().top + window.scrollY - 80;
+      window.scrollTo({ top, behavior: reduceMotion ? 'auto' : 'smooth' });
+    });
+  });
+
+})();
+</script>
+</body>
+  </html>
