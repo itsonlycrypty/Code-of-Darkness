@@ -221,7 +221,7 @@ section{position:relative;padding:120px 0;scroll-margin-top:90px}
 .nav-cta::after{display:none}
 .nav-cta:hover{box-shadow:var(--glow);border-color:var(--accent-2) !important;transform:translateY(-2px)}
 
-.burger{display:none;flex-direction:column;gap:5px;padding:8px;position:relative;z-index:1002}
+.burger{display:none;flex-direction:column;gap:5px;padding:8px;position:relative;z-index:2001}
 .burger span{width:24px;height:2px;background:var(--txt);border-radius:2px;transition:.35s var(--ease)}
 .burger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
 .burger.open span:nth-child(2){opacity:0;transform:scaleX(0)}
@@ -230,11 +230,11 @@ section{position:relative;padding:120px 0;scroll-margin-top:90px}
 @media(max-width:1080px){
   .burger{display:flex}
   .nav-links{
-    position:fixed;inset:0;z-index:1001;
+    position:fixed;inset:0;z-index:2000;
     flex-direction:column;justify-content:center;gap:24px;
-    background:rgba(4,4,9,.97);
-    backdrop-filter:blur(24px);
-    transform:translateY(-102%);
+    background:#040409; /* Solid background to fix overlay */
+    overflow-y:auto;
+    transform:translateY(-100%);
     transition:transform .6s var(--ease);
     font-size:1.15rem;
   }
@@ -402,7 +402,7 @@ section{position:relative;padding:120px 0;scroll-margin-top:90px}
 .work-item:hover .work-arrow{opacity:1;transform:translate(0,0) rotate(0)}
 
 /* ============================================================
-   15. TOOLS SECTION  ← NEW
+   15. TOOLS SECTION
    ============================================================ */
 .tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:22px}
 .tool-card{
@@ -601,7 +601,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
 .foot-bottom .made b{color:var(--accent-3)}
 
 /* ============================================================
-   21. ADMIN GATE MODAL  ← NEW
+   21. ADMIN GATE MODAL
    ============================================================ */
 .admin-gate{
   position:fixed;inset:0;z-index:5000;
@@ -686,7 +686,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
 .admin-gate-card .btn{width:100%;justify-content:center}
 
 /* ============================================================
-   22. ADMIN PANEL  ← NEW
+   22. ADMIN PANEL
    ============================================================ */
 .admin-panel{
   position:fixed;inset:0;z-index:5100;
@@ -899,6 +899,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
       <a href="#work">Work</a>
       <a href="#tools">Tools</a>
       <a href="#team">Team</a>
+      <a href="#" id="adminNavLink">Admin</a>
       <a href="#contact" class="nav-cta">Join Us</a>
     </nav>
 
@@ -915,7 +916,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
   <div class="container hero-inner">
 
     <div class="hero-badge reveal">
-      <span class="dot"></span> EST. 2019 · BUILDING IN THE SHADOWS
+      <span class="dot"></span> EST. 2024 · BUILDING IN THE SHADOWS
     </div>
 
     <h1 class="reveal">
@@ -985,8 +986,8 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
         <h2>We don't follow trends.<br><span class="grad-text">We build what lasts.</span></h2>
         <p>
           Code of Darkness started as six engineers in a basement with one rule:
-          ship things that work when everything else fails. Seven years later we're
-          a distributed collective across 18 countries — still operating by that rule.
+          ship things that work when everything else fails. Since then, we've grown
+          into a distributed collective across 18 countries — still operating by that rule.
         </p>
         <p>
           We take on the problems other teams run from: legacy migrations nobody
@@ -1020,7 +1021,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
         <div class="terminal-body">
 <span class="c-com">// manifest.ts — our operating principles</span><br>
 <span class="c-key">export const</span> <span class="c-fn">CodeOfDarkness</span> = {<br>
-&nbsp;&nbsp;founded: <span class="c-str">2019</span>,<br>
+&nbsp;&nbsp;founded: <span class="c-str">2024</span>,<br>
 &nbsp;&nbsp;engineers: <span class="c-str">45</span>,<br>
 &nbsp;&nbsp;countries: <span class="c-str">18</span>,<br>
 &nbsp;&nbsp;principles: [<br>
@@ -1461,7 +1462,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
           <span class="err-msg">Please give us at least 20 characters.</span>
         </div>
 
-        <!-- ============ CAPTCHA (I'm not a robot) ============ -->
+        <!-- ============ CAPTCHA ============ -->
         <div class="field captcha-field" id="captchaField">
           <label>Verification</label>
           <div class="captcha" id="captcha" data-state="idle">
@@ -1581,7 +1582,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
 </button>
 
 <!-- ============================================================
-     ADMIN GATE MODAL  (password protected — never displayed)
+     ADMIN GATE MODAL
      ============================================================ -->
 <div class="admin-gate" id="adminGate" aria-hidden="true">
   <div class="admin-gate-card" id="gateCard">
@@ -1604,7 +1605,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
 </div>
 
 <!-- ============================================================
-     ADMIN PANEL  (tools console)
+     ADMIN PANEL
      ============================================================ -->
 <div class="admin-panel" id="adminPanel" aria-hidden="true">
 
@@ -1908,6 +1909,17 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
 
     anchors.forEach((a) => a.addEventListener('click', closeMenu));
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMenu(); });
+
+    // Admin nav link
+    const adminNav = $('#adminNavLink');
+    if (adminNav) {
+      adminNav.addEventListener('click', (e) => {
+        e.preventDefault();
+        closeMenu();
+        if (sessionStorage.getItem(AUTH_KEY)) openPanel();
+        else openGate();
+      });
+    }
   })();
 
   /* ---------- 6. SCROLL PROGRESS + BACK TO TOP ---------- */
@@ -2079,7 +2091,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
   })();
 
   /* ============================================================
-     13. CAPTCHA — "I'm not a robot"
+     13. CAPTCHA
      ============================================================ */
   const Captcha = (function () {
     const el = $('#captcha');
@@ -2151,7 +2163,6 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
 
       if (message.value.trim().length < 20) { setError(message, true); ok = false; } else setError(message, false);
 
-      // CAPTCHA check
       if (!Captcha.isVerified()) {
         $('#captchaField').classList.add('error');
         Captcha.flagError();
@@ -2214,7 +2225,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
   });
 
   /* ============================================================
-     17. TOOLS STORE  (localStorage-backed)
+     17. TOOLS STORE
      ============================================================ */
   const TOOL_KEY = 'cod_tools_v1';
   let tools = [];
@@ -2222,6 +2233,11 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
   function loadTools() {
     try { tools = JSON.parse(localStorage.getItem(TOOL_KEY)) || []; }
     catch { tools = []; }
+    // Clear old fake tools if any exist from previous runs
+    if (tools.length > 0 && !localStorage.getItem('cod_tools_cleared')) {
+      // tools = []; // Uncomment to force clear on first run
+      localStorage.setItem('cod_tools_cleared', '1');
+    }
   }
   function persistTools() {
     try {
@@ -2329,9 +2345,9 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
     if (persistTools()) { renderTools(); renderAdminTools(); }
   });
 
-  /* ---------- 20. ADMIN GATE (password protected) ---------- */
-  const ADMIN_PASS = '3444';               // never rendered in the DOM
-  const AUTH_KEY   = 'cod_admin_session';  // sessionStorage flag
+  /* ---------- 20. ADMIN GATE ---------- */
+  const ADMIN_PASS = '3444';
+  const AUTH_KEY   = 'cod_admin_session';
 
   const gate   = $('#adminGate');
   const gateCard = $('#gateCard');
@@ -2394,7 +2410,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
   gate && gate.addEventListener('click', (e) => { if (e.target === gate) closeGate(); });
 
   /* ---------- 21. ADMIN ACCESS TRIGGERS ---------- */
-  // A) Keyboard: Ctrl + Shift + A
+  // Keyboard: Ctrl + Shift + A
   document.addEventListener('keydown', (e) => {
     if (e.ctrlKey && e.shiftKey && (e.key === 'A' || e.key === 'a')) {
       e.preventDefault();
@@ -2404,7 +2420,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
     if (e.key === 'Escape' && gate.classList.contains('open')) closeGate();
   });
 
-  // B) Secret: click the logo mark 5 times within 2 seconds
+  // Secret: click the logo mark 5 times within 2 seconds
   (function secretLogo() {
     const trigger = $('#logoTrigger');
     if (!trigger) return;
