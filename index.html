@@ -232,14 +232,15 @@ section{position:relative;padding:120px 0;scroll-margin-top:90px}
   .nav-links{
     position:fixed;
     top:0; left:0; width:100vw; height:100vh;
-    z-index:2000;
+    z-index:9999;
     flex-direction:column;justify-content:center;gap:24px;
-    background:#040409;
+    background:#05050a; /* Fully opaque background */
     overflow-y:auto;
     transform:translateY(-100%);
     transition:transform .6s var(--ease);
     font-size:1.15rem;
-    padding: 80px 24px 40px; /* Prevents links from being cut off at top */
+    padding: 100px 24px 40px; /* Prevents links from being cut off at top */
+    box-shadow: 0 0 50px rgba(0,0,0,0.9);
   }
   .nav-links.open{transform:translateY(0)}
   .nav-links a{font-size:1.15rem;letter-spacing:.06em}
@@ -487,21 +488,24 @@ section{position:relative;padding:120px 0;scroll-margin-top:90px}
 .socials svg{width:14px;height:14px}
 
 /* ============================================================
-   17. TESTIMONIALS
+   17. COMMENTS (Replacing Testimonials)
    ============================================================ */
-.slider{position:relative;overflow:hidden;border-radius:var(--radius)}
-.slider-track{display:flex;transition:transform .7s var(--ease)}
-.slide{min-width:100%;padding:56px 52px;border:1px solid var(--line);border-radius:var(--radius);background:var(--panel);backdrop-filter:blur(12px)}
-@media(max-width:600px){.slide{padding:36px 26px}}
-.quote-mark{font-family:var(--f-display);font-size:3.4rem;line-height:1;color:var(--accent);opacity:.35;margin-bottom:8px}
-.slide blockquote{font-size:clamp(1rem,2.2vw,1.28rem);line-height:1.7;color:#d6d9ea;margin-bottom:30px;font-weight:300}
-.slide-author{display:flex;align-items:center;gap:16px}
-.slide-author .av{width:48px;height:48px;border-radius:50%;display:grid;place-content:center;font-family:var(--f-display);font-weight:700;font-size:.9rem;color:#fff;background:linear-gradient(140deg,var(--c1),var(--c2))}
-.slide-author strong{display:block;font-size:.92rem}
-.slide-author span{font-family:var(--f-mono);font-size:.72rem;color:var(--dim);letter-spacing:.08em}
-.slider-nav{display:flex;justify-content:center;gap:10px;margin-top:30px}
-.slider-nav button{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.14);transition:.4s var(--ease)}
-.slider-nav button.active{width:30px;border-radius:100px;background:var(--grad);box-shadow:0 0 16px rgba(139,92,246,.6)}
+.comments-wrapper{display:grid;grid-template-columns:1fr 1.5fr;gap:40px;align-items:start}
+@media(max-width:900px){.comments-wrapper{grid-template-columns:1fr;}}
+.comment-form{padding:32px;border-radius:var(--radius);border:1px solid var(--line);background:var(--panel);backdrop-filter:blur(14px);}
+.comment-form .field{margin-bottom:16px;}
+.comment-form .field input,.comment-form .field textarea{width:100%;padding:12px 16px;border-radius:10px;background:rgba(0,0,0,.35);border:1px solid var(--line);color:var(--txt);font-size:.9rem;transition:.3s;}
+.comment-form .field input:focus,.comment-form .field textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(139,92,246,.1);}
+.comment-form .field textarea{resize:vertical;min-height:100px;}
+.comment-form button{width:100%;justify-content:center;margin-top:6px;}
+
+.comments-list{display:flex;flex-direction:column;gap:16px;max-height:600px;overflow-y:auto;padding-right:10px;}
+.comment-card{padding:22px;border-radius:var(--radius-sm);border:1px solid var(--line);background:var(--panel);transition:.3s;}
+.comment-card:hover{border-color:var(--line-hi);background:var(--panel-hi);}
+.comment-card .meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-family:var(--f-mono);font-size:.72rem;color:var(--dim);}
+.comment-card .meta strong{color:var(--accent-2);font-size:.8rem;}
+.comment-card p{color:var(--muted);font-size:.9rem;line-height:1.6;}
+.no-comments{text-align:center;padding:50px 20px;color:var(--dim);font-family:var(--f-mono);font-size:.8rem;border:1px dashed var(--line);border-radius:var(--radius-sm);}
 
 /* ============================================================
    18. CONTACT + CAPTCHA
@@ -904,6 +908,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
       <a href="#work">Work</a>
       <a href="#tools">Tools</a>
       <a href="#team">Team</a>
+      <a href="#comments">Comments</a>
       <a href="#" id="adminNavLink">Admin</a>
       <a href="#contact" class="nav-cta">Join Us</a>
     </nav>
@@ -921,7 +926,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
   <div class="container hero-inner">
 
     <div class="hero-badge reveal">
-      <span class="dot"></span> EST. 2024 · BUILDING IN THE SHADOWS
+      <span class="dot"></span> EST. 2026 · BUILDING IN THE SHADOWS
     </div>
 
     <h1 class="reveal">
@@ -1026,7 +1031,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
         <div class="terminal-body">
 <span class="c-com">// manifest.ts — our operating principles</span><br>
 <span class="c-key">export const</span> <span class="c-fn">CodeOfDarkness</span> = {<br>
-&nbsp;&nbsp;founded: <span class="c-str">2024</span>,<br>
+&nbsp;&nbsp;founded: <span class="c-str">2026</span>,<br>
 &nbsp;&nbsp;engineers: <span class="c-str">45</span>,<br>
 &nbsp;&nbsp;countries: <span class="c-str">18</span>,<br>
 &nbsp;&nbsp;principles: [<br>
@@ -1268,22 +1273,32 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
 
     <div class="team-grid">
 
+      <!-- Founder: Froste -->
       <article class="member reveal" style="--c1:#8b5cf6;--c2:#00e5ff">
-        <div class="avatar">NV</div>
-        <h4>Nadia Vasquez</h4>
-        <span class="role">Founder / Systems</span>
-        <p class="bio">Distributed systems architect. Previously scaled a payments ledger to 40B events.</p>
+        <div class="avatar">FR</div>
+        <h4>Froste</h4>
+        <span class="role">Founder / OSINT</span>
+        <p class="bio">
+          Real Name: Froste.<br>
+          Code Name: Evil Twin.<br>
+          Hacker Username: Osint.
+        </p>
         <div class="socials">
           <a href="#" aria-label="GitHub"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2A10 10 0 0 0 8.84 21.5c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.1-1.47-1.1-1.47-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02a9.5 9.5 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10 10 0 0 0 12 2z"/></svg></a>
           <a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5A2.5 2.5 0 1 0 5 8.5a2.5 2.5 0 0 0-.02-5zM3 9h4v12H3zM9 9h3.8v1.7h.05c.53-1 1.83-2.05 3.77-2.05C20.4 8.65 21 11.1 21 14.2V21h-4v-6c0-1.43-.03-3.28-2-3.28-2 0-2.3 1.56-2.3 3.17V21H9z"/></svg></a>
         </div>
       </article>
 
+      <!-- Creator: Maxwell -->
       <article class="member reveal" style="--c1:#ff2d75;--c2:#8b5cf6">
-        <div class="avatar">KO</div>
-        <h4>Kaito Okonkwo</h4>
-        <span class="role">Head of Security</span>
-        <p class="bio">Offensive security lead. 60+ CVEs credited, ex-red team for a national bank.</p>
+        <div class="avatar">MX</div>
+        <h4>Maxwell</h4>
+        <span class="role">Lead Developer / Crypt</span>
+        <p class="bio">
+          Real Name: Maxwell.<br>
+          Code Name: Crypty.<br>
+          Hacker Username: Anonymous_Vael.
+        </p>
         <div class="socials">
           <a href="#" aria-label="GitHub"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2A10 10 0 0 0 8.84 21.5c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.1-1.47-1.1-1.47-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02a9.5 9.5 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10 10 0 0 0 12 2z"/></svg></a>
           <a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5A2.5 2.5 0 1 0 5 8.5a2.5 2.5 0 0 0-.02-5zM3 9h4v12H3zM9 9h3.8v1.7h.05c.53-1 1.83-2.05 3.77-2.05C20.4 8.65 21 11.1 21 14.2V21h-4v-6c0-1.43-.03-3.28-2-3.28-2 0-2.3 1.56-2.3 3.17V21H9z"/></svg></a>
@@ -1316,68 +1331,40 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
   </div>
 </section>
 
-<!-- ============ TESTIMONIALS ============ -->
-<section id="voices">
+<!-- ============ COMMENTS (Replacing Testimonials) ============ -->
+<section id="comments">
   <div class="container">
     <div class="section-head center reveal">
-      <span class="eyebrow">Voices</span>
-      <h2>What partners <span class="grad-text">say</span></h2>
+      <span class="eyebrow">Transmissions</span>
+      <h2>Community <span class="grad-text">Voices</span></h2>
+      <p>Leave a message in the dark. We read everything.</p>
     </div>
 
-    <div class="slider reveal">
-      <div class="slider-track" id="sliderTrack">
-
-        <div class="slide">
-          <div class="quote-mark">“</div>
-          <blockquote>
-            They found three critical vulnerabilities our previous auditors missed entirely,
-            then rebuilt the auth layer without a single minute of downtime. The most
-            competent team we've worked with.
-          </blockquote>
-          <div class="slide-author">
-            <div class="av" style="--c1:#8b5cf6;--c2:#00e5ff">AR</div>
-            <div>
-              <strong>Amara Reyes</strong>
-              <span>CTO · Northwind Financial</span>
-            </div>
-          </div>
+    <div class="comments-wrapper reveal">
+      <!-- Comment Form -->
+      <form id="commentForm" class="comment-form" novalidate>
+        <div class="field">
+          <label for="cName">Name / Alias</label>
+          <input type="text" id="cName" placeholder="Anonymous" required />
+          <span class="err-msg">Please enter a name.</span>
         </div>
-
-        <div class="slide">
-          <div class="quote-mark">“</div>
-          <blockquote>
-            We handed them a nine-year-old monolith and a hard deadline. They shipped a
-            modular platform in fourteen weeks and our deploy time went from 40 minutes
-            to 90 seconds.
-          </blockquote>
-          <div class="slide-author">
-            <div class="av" style="--c1:#ff2d75;--c2:#8b5cf6">JT</div>
-            <div>
-              <strong>Jonas Thorne</strong>
-              <span>VP Engineering · Helix Logistics</span>
-            </div>
-          </div>
+        <div class="field">
+          <label for="cMessage">Message</label>
+          <textarea id="cMessage" placeholder="Your transmission…" required></textarea>
+          <span class="err-msg">Please enter a message.</span>
         </div>
+        <button type="submit" class="btn btn-primary" data-cursor>
+          Transmit
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+        <div class="form-status" id="commentStatus" style="display:none; margin-top:16px; padding:12px; border-radius:10px; background:rgba(34,255,136,.08); border:1px solid rgba(34,255,136,.3); color:var(--accent-4); font-size:.85rem;">✓ Transmission received.</div>
+      </form>
 
-        <div class="slide">
-          <div class="quote-mark">“</div>
-          <blockquote>
-            Their ML team didn't just hand us a model — they handed us a system we could
-            actually operate, monitor and explain to regulators. That's rare.
-          </blockquote>
-          <div class="slide-author">
-            <div class="av" style="--c1:#22ff88;--c2:#00e5ff">SK</div>
-            <div>
-              <strong>Sofia Kowalski</strong>
-              <span>Head of Data · Meridian Health</span>
-            </div>
-          </div>
-        </div>
-
+      <!-- Comments List -->
+      <div class="comments-list" id="commentsList">
+        <!-- Comments injected here via JS -->
       </div>
     </div>
-
-    <div class="slider-nav" id="sliderNav"></div>
   </div>
 </section>
 
@@ -1552,7 +1539,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
           <li><a href="#about">About</a></li>
           <li><a href="#team">Team</a></li>
           <li><a href="#work">Work</a></li>
-          <li><a href="#contact">Careers</a></li>
+          <li><a href="#comments">Comments</a></li>
         </ul>
       </div>
 
@@ -2062,48 +2049,77 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
     });
   })();
 
-  /* ---------- 12. TESTIMONIAL SLIDER ---------- */
-  (function slider() {
-    const track = $('#sliderTrack');
-    const nav = $('#sliderNav');
-    if (!track) return;
-    const slides = $$('.slide', track);
-    let index = 0, timer;
-
-    slides.forEach((_, i) => {
-      const b = document.createElement('button');
-      b.setAttribute('aria-label', 'Go to testimonial ' + (i + 1));
-      b.addEventListener('click', () => go(i));
-      nav.appendChild(b);
-    });
-    const dots = $$('button', nav);
-
-    function go(i) {
-      index = (i + slides.length) % slides.length;
-      track.style.transform = `translateX(-${index * 100}%)`;
-      dots.forEach((d, k) => d.classList.toggle('active', k === index));
-      restart();
-    }
-    function restart() {
-      clearInterval(timer);
-      if (!reduceMotion) timer = setInterval(() => go(index + 1), 6500);
-    }
-
-    let startX = null;
-    track.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; }, { passive: true });
-    track.addEventListener('touchend', (e) => {
-      if (startX === null) return;
-      const dx = e.changedTouches[0].clientX - startX;
-      if (Math.abs(dx) > 50) go(index + (dx < 0 ? 1 : -1));
-      startX = null;
-    });
-
-    go(0);
-  })();
-
   /* ============================================================
-     13. CAPTCHA
+     12. COMMENTS SYSTEM (Replacing Testimonials)
      ============================================================ */
+  const COMMENT_KEY = 'cod_comments_v1';
+  const commentsList = $('#commentsList');
+  const commentForm = $('#commentForm');
+  const commentStatus = $('#commentStatus');
+
+  function loadComments() {
+    let comments = [];
+    try { comments = JSON.parse(localStorage.getItem(COMMENT_KEY)) || []; } catch { comments = []; }
+    renderComments(comments);
+  }
+
+  function saveComment(name, message) {
+    let comments = [];
+    try { comments = JSON.parse(localStorage.getItem(COMMENT_KEY)) || []; } catch { comments = []; }
+    comments.unshift({ id: Date.now(), name, message, date: new Date().toISOString() });
+    localStorage.setItem(COMMENT_KEY, JSON.stringify(comments));
+    renderComments(comments);
+  }
+
+  function renderComments(comments) {
+    if (!commentsList) return;
+    if (!comments || comments.length === 0) {
+      commentsList.innerHTML = `<div class="no-comments">No transmissions yet. Be the first to leave a message.</div>`;
+      return;
+    }
+    commentsList.innerHTML = comments.map(c => `
+      <div class="comment-card">
+        <div class="meta">
+          <strong>${escapeHtml(c.name)}</strong>
+          <span>${new Date(c.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
+        </div>
+        <p>${escapeHtml(c.message)}</p>
+      </div>
+    `).join('');
+  }
+
+  if (commentForm) {
+    commentForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const nameInput = $('#cName');
+      const msgInput = $('#cMessage');
+      let ok = true;
+
+      if (!nameInput.value.trim()) { nameInput.closest('.field').classList.add('error'); ok = false; }
+      else { nameInput.closest('.field').classList.remove('error'); }
+
+      if (!msgInput.value.trim()) { msgInput.closest('.field').classList.add('error'); ok = false; }
+      else { msgInput.closest('.field').classList.remove('error'); }
+
+      if (!ok) return;
+
+      saveComment(nameInput.value.trim(), msgInput.value.trim());
+      commentForm.reset();
+
+      if (commentStatus) {
+        commentStatus.style.display = 'block';
+        setTimeout(() => { commentStatus.style.display = 'none'; }, 4000);
+      }
+    });
+
+    $$('#commentForm input, #commentForm textarea').forEach(el => {
+      el.addEventListener('input', () => el.closest('.field').classList.remove('error'));
+    });
+  }
+
+  loadComments();
+
+  /* ---------- 13. CAPTCHA ---------- */
   const Captcha = (function () {
     const el = $('#captcha');
     const box = $('#captchaBox');
