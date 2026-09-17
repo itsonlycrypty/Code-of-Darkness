@@ -230,13 +230,16 @@ section{position:relative;padding:120px 0;scroll-margin-top:90px}
 @media(max-width:1080px){
   .burger{display:flex}
   .nav-links{
-    position:fixed;inset:0;z-index:2000;
+    position:fixed;
+    top:0; left:0; width:100vw; height:100vh;
+    z-index:2000;
     flex-direction:column;justify-content:center;gap:24px;
-    background:#040409; /* Solid background to fix overlay */
+    background:#040409;
     overflow-y:auto;
     transform:translateY(-100%);
     transition:transform .6s var(--ease);
     font-size:1.15rem;
+    padding: 80px 24px 40px; /* Prevents links from being cut off at top */
   }
   .nav-links.open{transform:translateY(0)}
   .nav-links a{font-size:1.15rem;letter-spacing:.06em}
@@ -513,6 +516,8 @@ section{position:relative;padding:120px 0;scroll-margin-top:90px}
 .info-card .ico svg{width:18px;height:18px}
 .info-card h5{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);margin-bottom:5px}
 .info-card p{font-size:.92rem;color:#c8ccdd}
+.info-card p a{color:var(--accent-2);text-decoration:underline;text-underline-offset:3px}
+.info-card p a:hover{color:var(--accent-4)}
 
 form{padding:40px;border-radius:var(--radius);border:1px solid var(--line);background:var(--panel);backdrop-filter:blur(14px)}
 @media(max-width:600px){form{padding:26px}}
@@ -1408,23 +1413,25 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
           </div>
         </div>
 
+        <!-- WhatsApp Card -->
         <div class="info-card">
           <div class="ico">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 1.9"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
           </div>
           <div>
-            <h5>Response Time</h5>
-            <p>Under 24 hours, every weekday</p>
+            <h5>WhatsApp Channel</h5>
+            <p><a href="https://whatsapp.com/channel/0029Vb8OdK5HLHQbmiS47m3O" target="_blank" rel="noopener noreferrer">Join our channel</a></p>
           </div>
         </div>
 
+        <!-- Telegram Card -->
         <div class="info-card">
           <div class="ico">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.6-3 7.6-7 9-4-1.4-7-4.4-7-9V6l7-3z"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 4.5 2.5 11.5l4.8 1.4L9 18l3.5-4.5 5.5 2.5z"/></svg>
           </div>
           <div>
-            <h5>PGP Available</h5>
-            <p>Fingerprint on request — for sensitive briefs</p>
+            <h5>Telegram Channel</h5>
+            <p><a href="https://t.me/+cK_6P-8NRrRiMDc8" target="_blank" rel="noopener noreferrer">Join our channel</a></p>
           </div>
         </div>
       </div>
@@ -1528,10 +1535,14 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
           <span class="logo-text">CODE<span>·</span>DARKNESS</span>
         </a>
         <p>An elite tech collective engineering secure, scalable systems for teams who can't afford to guess.</p>
+        <!-- Updated Socials: Only WhatsApp and Telegram -->
         <div class="socials" style="justify-content:flex-start">
-          <a href="#" aria-label="GitHub"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2A10 10 0 0 0 8.84 21.5c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.1-1.47-1.1-1.47-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02a9.5 9.5 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10 10 0 0 0 12 2z"/></svg></a>
-          <a href="#" aria-label="X"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.2 2H21l-6.6 7.5L22 22h-6.2l-4.8-6.3L5.5 22H2.7l7-8L2 2h6.3l4.3 5.7zm-1 18h1.6L7.9 3.7H6.2z"/></svg></a>
-          <a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5A2.5 2.5 0 1 0 5 8.5a2.5 2.5 0 0 0-.02-5zM3 9h4v12H3zM9 9h3.8v1.7h.05c.53-1 1.83-2.05 3.77-2.05C20.4 8.65 21 11.1 21 14.2V21h-4v-6c0-1.43-.03-3.28-2-3.28-2 0-2.3 1.56-2.3 3.17V21H9z"/></svg></a>
+          <a href="https://t.me/+cK_6P-8NRrRiMDc8" target="_blank" rel="noopener noreferrer" aria-label="Telegram" style="color:var(--accent-2)">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.5 4.5 2.5 11.5l4.8 1.4L9 18l3.5-4.5 5.5 2.5z"/></svg>
+          </a>
+          <a href="https://whatsapp.com/channel/0029Vb8OdK5HLHQbmiS47m3O" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" style="color:var(--accent-4)">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+          </a>
         </div>
       </div>
 
@@ -2233,11 +2244,6 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
   function loadTools() {
     try { tools = JSON.parse(localStorage.getItem(TOOL_KEY)) || []; }
     catch { tools = []; }
-    // Clear old fake tools if any exist from previous runs
-    if (tools.length > 0 && !localStorage.getItem('cod_tools_cleared')) {
-      // tools = []; // Uncomment to force clear on first run
-      localStorage.setItem('cod_tools_cleared', '1');
-    }
   }
   function persistTools() {
     try {
