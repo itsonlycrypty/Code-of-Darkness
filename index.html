@@ -207,6 +207,25 @@ section{position:relative;padding:120px 0;scroll-margin-top:90px}
 .logo-text{font-size:.85rem;letter-spacing:.16em}
 .logo-text span{color:var(--accent);margin:0 3px}
 
+/* Subscriber Count Badge */
+.nav-sub-count {
+  font-family: var(--f-mono);
+  font-size: 0.65rem;
+  background: var(--grad-soft);
+  border: 1px solid rgba(139,92,246,.4);
+  color: var(--accent-2);
+  padding: 2px 8px;
+  border-radius: 20px;
+  margin-left: 10px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  transition: .3s;
+}
+.nav-sub-count:hover { background: rgba(139,92,246,.3); color: #fff; }
+
 .nav-links{display:flex;align-items:center;gap:30px}
 .nav-links a{position:relative;font-size:.86rem;font-weight:500;letter-spacing:.02em;color:var(--muted);transition:color .3s}
 .nav-links a::after{content:"";position:absolute;left:0;bottom:-6px;width:0;height:1px;background:var(--grad);transition:width .35s var(--ease)}
@@ -916,6 +935,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
     <a href="#home" class="logo" id="logoTrigger" data-cursor>
       <span class="logo-mark">◈</span>
       <span class="logo-text">CODE<span>·</span>DARKNESS</span>
+      <span class="nav-sub-count" id="navSubCount">0</span>
     </a>
 
     <nav class="nav-links" id="navLinks">
@@ -1572,7 +1592,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
       </div>
 
       <div class="foot-col">
-        <h5>Stay in the dark</h5>
+        <h5>Subscribe for free and become a member.</h5>
         <p style="color:var(--muted);font-size:.87rem">Occasional notes on engineering. No spam, ever.</p>
         <form class="newsletter" id="newsletterForm">
           <input type="email" placeholder="your@email.com" aria-label="Email" required />
@@ -1648,11 +1668,12 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
         <a href="#" class="active" data-tab="add">＋ Add Tool</a>
         <a href="#" data-tab="manage">≡ Manage Tools</a>
         <a href="#" data-tab="requests">✉ Requests</a>
+        <a href="#" data-tab="subscribers">👥 Subscribers</a>
         <a href="#" data-tab="settings">⚙ Settings</a>
       </nav>
       <div class="admin-hint">
         <strong>Storage</strong>
-        <p>Tools are stored in this browser. File uploads are capped at 2 MB to stay within localStorage limits.</p>
+        <p>Data is stored in this browser. File uploads are capped at 2 MB to stay within localStorage limits.</p>
       </div>
     </aside>
 
@@ -1728,6 +1749,12 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
       <section class="admin-tab" id="tab-requests">
         <h3>Incoming Requests</h3>
         <div class="admin-tools" id="adminRequests"></div>
+      </section>
+
+      <!-- SUBSCRIBERS -->
+      <section class="admin-tab" id="tab-subscribers">
+        <h3>Subscribers (Members)</h3>
+        <div class="admin-tools" id="adminSubscribers"></div>
       </section>
 
       <!-- SETTINGS -->
@@ -2260,23 +2287,84 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
     });
   })();
 
-  /* ---------- 15. NEWSLETTER ---------- */
-  (function newsletter() {
-    const f = $('#newsletterForm');
-    if (!f) return;
-    f.addEventListener('submit', (e) => {
+  /* ============================================================
+     15. SUBSCRIBERS SYSTEM
+     ============================================================ */
+  const SUB_KEY = 'cod_subscribers_v1';
+  let subscribers = [];
+
+  function loadSubscribers() {
+    try { subscribers = JSON.parse(localStorage.getItem(SUB_KEY)) || []; }
+    catch { subscribers = []; }
+    updateSubCountUI();
+  }
+
+  function saveSubscriber(email) {
+    // Basic email regex validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+    if (!emailRegex.test(email)) return false;
+
+    // Check for duplicates
+    if (subscribers.some(s => s.email.toLowerCase() === email.toLowerCase())) {
+      return 'duplicate';
+    }
+
+    subscribers.push({ email: email, date: new Date().toISOString() });
+    try {
+      localStorage.setItem(SUB_KEY, JSON.stringify(subscribers));
+      updateSubCountUI();
+      return true;
+    } catch (e) {
+      alert('Storage full. Could not subscribe.');
+      return false;
+    }
+  }
+
+  function updateSubCountUI() {
+    const count = subscribers.length;
+    const navBadge = $('#navSubCount');
+    if (navBadge) navBadge.textContent = count;
+  }
+
+  // Handle Newsletter form
+  const newsletterForm = $('#newsletterForm');
+  if (newsletterForm) {
+    newsletterForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      const input = f.querySelector('input');
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(input.value.trim())) {
+      const input = newsletterForm.querySelector('input');
+      const email = input.value.trim();
+      const statusEl = $('#newsStatus');
+
+      if (!email) return;
+
+      const result = saveSubscriber(email);
+
+      if (result === true) {
+        input.value = '';
+        input.style.borderColor = '';
+        statusEl.textContent = '✓ Subscribed. Welcome to the dark.';
+        statusEl.style.color = 'var(--accent-4)';
+        statusEl.style.display = 'block';
+      } else if (result === 'duplicate') {
+        statusEl.textContent = 'ℹ Already a member.';
+        statusEl.style.color = 'var(--accent-2)';
+        statusEl.style.display = 'block';
+      } else {
+        statusEl.textContent = '⚠ Invalid email.';
+        statusEl.style.color = 'var(--accent-3)';
+        statusEl.style.display = 'block';
         input.style.borderColor = 'var(--accent-3)';
-        return;
       }
-      input.style.borderColor = '';
-      input.value = '';
-      $('#newsStatus').style.display = 'block';
-      setTimeout(() => { $('#newsStatus').style.display = 'none'; }, 5000);
+
+      setTimeout(() => {
+        statusEl.style.display = 'none';
+        input.style.borderColor = '';
+      }, 5000);
     });
-  })();
+  }
+
+  // Load subscribers on start
+  loadSubscribers();
 
   /* ---------- 16. SMOOTH ANCHORS ---------- */
   $$('a[href^="#"]').forEach((a) => {
@@ -2439,6 +2527,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
     document.body.classList.add('lock');
     renderAdminTools();
     renderAdminRequests();
+    renderAdminSubscribers();
     sessionStorage.setItem(AUTH_KEY, '1');
   }
 
@@ -2524,6 +2613,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
       if (target) target.classList.add('active');
       if (tab === 'manage') renderAdminTools();
       if (tab === 'requests') renderAdminRequests();
+      if (tab === 'subscribers') renderAdminSubscribers();
     });
   });
 
@@ -2716,6 +2806,39 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
 
   // Load requests initially if the tab is active
   renderAdminRequests();
+
+  /* ---------- 27. ADMIN SUBSCRIBERS MANAGEMENT ---------- */
+  function renderAdminSubscribers() {
+    const wrap = $('#adminSubscribers');
+    if (!wrap) return;
+
+    if (subscribers.length === 0) {
+      wrap.innerHTML = '<div style="padding:40px;text-align:center;border:1px dashed var(--line-hi);border-radius:14px;color:var(--dim);font-family:var(--f-mono);font-size:.8rem">No subscribers yet.</div>';
+      return;
+    }
+
+    wrap.innerHTML = subscribers.map((s, index) => {
+      const mailtoLink = `mailto:${escapeAttr(s.email)}?subject=${encodeURIComponent('Welcome to Code of Darkness')}&body=${encodeURIComponent('Hello,\n\nThank you for subscribing to Code of Darkness. You are now a member.\n\nStay in the dark,\nCode of Darkness Team')}`;
+      const dateStr = new Date(s.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+      return `
+        <div class="admin-tool-row" style="justify-content:space-between;">
+          <div style="display:flex;align-items:center;gap:16px;flex:1;min-width:0;">
+            <div class="row-icon" style="font-size:1rem;font-weight:bold;color:var(--accent-2);">${index + 1}</div>
+            <div class="row-info">
+              <strong>${escapeHtml(s.email)}</strong>
+              <span>Subscribed: ${dateStr}</span>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <a href="${mailtoLink}" class="btn-admin" style="font-size:.7rem;padding:8px 16px;">Send Confirmation</a>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // Load subscribers initially if the tab is active
+  renderAdminSubscribers();
 
 })();
 </script>
