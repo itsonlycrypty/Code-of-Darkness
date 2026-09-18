@@ -1407,13 +1407,14 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
           </div>
         </div>
 
+        <!-- Updated Location to Everywhere -->
         <div class="info-card">
           <div class="ico">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-5.4 7-11a7 7 0 1 0-14 0c0 5.6 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/></svg>
           </div>
           <div>
             <h5>Distributed HQ</h5>
-            <p>Lisbon · Lagos · Tokyo · Toronto</p>
+            <p>Everywhere</p>
           </div>
         </div>
 
@@ -1646,6 +1647,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
       <nav>
         <a href="#" class="active" data-tab="add">＋ Add Tool</a>
         <a href="#" data-tab="manage">≡ Manage Tools</a>
+        <a href="#" data-tab="requests">✉ Requests</a>
         <a href="#" data-tab="settings">⚙ Settings</a>
       </nav>
       <div class="admin-hint">
@@ -1720,6 +1722,12 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
       <section class="admin-tab" id="tab-manage">
         <h3>Active tools</h3>
         <div class="admin-tools" id="adminTools"></div>
+      </section>
+
+      <!-- REQUESTS -->
+      <section class="admin-tab" id="tab-requests">
+        <h3>Incoming Requests</h3>
+        <div class="admin-tools" id="adminRequests"></div>
       </section>
 
       <!-- SETTINGS -->
@@ -2217,6 +2225,21 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
 
       if (!ok) { status.classList.remove('show'); return; }
 
+      // Save Request to localStorage
+      const newRequest = {
+        id: 'r_' + Date.now(),
+        name: name.value.trim(),
+        email: email.value.trim(),
+        subject: $('#subject').value,
+        message: message.value.trim(),
+        date: new Date().toISOString(),
+        status: 'new'
+      };
+      let requests = [];
+      try { requests = JSON.parse(localStorage.getItem('cod_requests_v1')) || []; } catch {}
+      requests.unshift(newRequest);
+      localStorage.setItem('cod_requests_v1', JSON.stringify(requests));
+
       const btn = form.querySelector('button[type="submit"]');
       const original = btn.innerHTML;
       btn.innerHTML = 'Transmitting…';
@@ -2415,6 +2438,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
     panel.setAttribute('aria-hidden', 'false');
     document.body.classList.add('lock');
     renderAdminTools();
+    renderAdminRequests();
     sessionStorage.setItem(AUTH_KEY, '1');
   }
 
@@ -2499,6 +2523,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
       const target = $('#tab-' + tab);
       if (target) target.classList.add('active');
       if (tab === 'manage') renderAdminTools();
+      if (tab === 'requests') renderAdminRequests();
     });
   });
 
@@ -2627,6 +2652,70 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
   /* ---------- 25. BOOTSTRAP TOOLS ---------- */
   loadTools();
   renderTools();
+
+  /* ---------- 26. ADMIN REQUESTS MANAGEMENT ---------- */
+  function renderAdminRequests() {
+    const wrap = $('#adminRequests');
+    if (!wrap) return;
+    let requests = [];
+    try { requests = JSON.parse(localStorage.getItem('cod_requests_v1')) || []; } catch {}
+
+    if (requests.length === 0) {
+      wrap.innerHTML = '<div style="padding:40px;text-align:center;border:1px dashed var(--line-hi);border-radius:14px;color:var(--dim);font-family:var(--f-mono);font-size:.8rem">No requests yet.</div>';
+      return;
+    }
+
+    wrap.innerHTML = requests.map(r => {
+      const mailtoLink = `mailto:${escapeAttr(r.email)}?subject=${encodeURIComponent('Re: ' + r.subject)}&body=${encodeURIComponent('Hello ' + r.name + ',\n\n')}`;
+      return `
+        <div class="admin-tool-row" style="align-items:flex-start;flex-direction:column;gap:12px;padding:20px;">
+          <div style="display:flex;justify-content:space-between;width:100%;align-items:center;flex-wrap:wrap;gap:10px;">
+            <div>
+              <strong style="color:var(--accent-2);font-size:1rem;">${escapeHtml(r.name)}</strong>
+              <span style="font-family:var(--f-mono);font-size:.75rem;color:var(--dim);margin-left:10px;">&lt;${escapeHtml(r.email)}&gt;</span>
+            </div>
+            <span class="admin-badge" style="font-size:.6rem;padding:4px 8px;${r.status === 'new' ? 'color:var(--accent-2);border-color:var(--accent-2);background:rgba(0,229,255,.08);' : ''}">${r.status.toUpperCase()}</span>
+          </div>
+          <div style="font-size:.85rem;color:var(--txt);width:100%;line-height:1.6;background:rgba(0,0,0,.2);padding:12px;border-radius:8px;border:1px solid var(--line);">
+            <b style="color:var(--dim);font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;">Subject:</b> ${escapeHtml(r.subject)}<br><br>
+            <b style="color:var(--dim);font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;">Message:</b><br> ${escapeHtml(r.message)}
+          </div>
+          <div style="display:flex;gap:10px;width:100%;justify-content:flex-end;margin-top:8px;flex-wrap:wrap;">
+            <a href="${mailtoLink}" class="btn-admin" style="font-size:.7rem;padding:8px 16px;">Reply via Email</a>
+            <button type="button" class="btn-admin" style="font-size:.7rem;padding:8px 16px;" data-mark="${r.id}">Mark Read</button>
+            <button type="button" class="btn-admin danger" style="font-size:.7rem;padding:8px 16px;" data-del-req="${r.id}">Delete</button>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // Event listeners for marking read and deleting requests
+  $('#adminRequests') && $('#adminRequests').addEventListener('click', (e) => {
+    const markBtn = e.target.closest('[data-mark]');
+    if (markBtn) {
+      const id = markBtn.dataset.mark;
+      let requests = JSON.parse(localStorage.getItem('cod_requests_v1')) || [];
+      const req = requests.find(x => x.id === id);
+      if (req) {
+        req.status = 'read';
+        localStorage.setItem('cod_requests_v1', JSON.stringify(requests));
+        renderAdminRequests();
+      }
+    }
+    const delBtn = e.target.closest('[data-del-req]');
+    if (delBtn) {
+      if (!confirm('Delete this request?')) return;
+      const id = delBtn.dataset.delReq;
+      let requests = JSON.parse(localStorage.getItem('cod_requests_v1')) || [];
+      requests = requests.filter(x => x.id !== id);
+      localStorage.setItem('cod_requests_v1', JSON.stringify(requests));
+      renderAdminRequests();
+    }
+  });
+
+  // Load requests initially if the tab is active
+  renderAdminRequests();
 
 })();
 </script>
