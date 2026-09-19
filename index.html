@@ -901,7 +901,53 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
 .settings-card p{color:var(--muted);font-size:.88rem;max-width:320px}
 
 /* ============================================================
-   23. REDUCED MOTION
+   23. ADMIN CONFIRMATION MODAL
+   ============================================================ */
+.confirm-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 6000;
+  background: rgba(3,3,7,.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: grid;
+  place-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: .35s var(--ease);
+  padding: 24px;
+}
+.confirm-modal.open { opacity: 1; visibility: visible; }
+.confirm-card {
+  width: min(420px, 100%);
+  padding: 36px;
+  border-radius: 20px;
+  background: linear-gradient(180deg, rgba(20,18,32,.98), rgba(8,8,15,.98));
+  border: 1px solid rgba(139,92,246,.28);
+  box-shadow: 0 40px 100px rgba(0,0,0,.7), 0 0 80px rgba(139,92,246,.12);
+  text-align: center;
+  transform: scale(.94) translateY(10px);
+  transition: .5s var(--ease);
+}
+.confirm-modal.open .confirm-card { transform: scale(1) translateY(0); }
+.confirm-card h3 {
+  font-family: var(--f-display); font-size: 1.15rem; font-weight: 800;
+  margin-bottom: 8px; letter-spacing: .03em;
+}
+.confirm-card p {
+  color: var(--muted); font-size: .88rem; margin-bottom: 24px; line-height: 1.6;
+}
+.confirm-actions { display: flex; flex-direction: column; gap: 10px; }
+.confirm-actions button { width: 100%; justify-content: center; }
+.confirm-actions .btn-admin.primary {
+  background: var(--grad); color: #05050a; border-color: transparent;
+}
+.confirm-actions .btn-admin.primary:hover {
+  box-shadow: var(--glow); transform: translateY(-2px);
+}
+
+/* ============================================================
+   24. REDUCED MOTION
    ============================================================ */
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important}
@@ -1316,7 +1362,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
       <!-- Founder: Froste -->
       <article class="member reveal" style="--c1:#8b5cf6;--c2:#00e5ff">
         <div class="avatar">
-          <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%230a0a13'/><path d='M50 15 C30 15 20 35 20 55 C20 70 30 85 50 85 C70 85 80 70 80 55 C80 35 70 15 50 15 Z' fill='%23111122' stroke='%238b5cf6' stroke-width='2'/><path d='M50 30 C40 30 32 40 32 50 C32 60 40 70 50 70 C60 70 68 60 68 50 C68 40 60 30 50 30 Z' fill='%231a1a2e' stroke='%2300e5ff' stroke-width='1.5'/><path d='M38 45 L46 45 M54 45 L62 45' stroke='%2300e5ff' stroke-width='2.5' stroke-linecap='round'/><text x='50' y='62' font-family='monospace' font-size='10' fill='%23ff2d75' text-anchor='middle' font-weight='bold'>ANON</text><circle cx='50' cy='50' r='45' fill='none' stroke='%238b5cf6' stroke-width='1' opacity='0.5'/></svg>" alt="Froste">
+          <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%230a0a13'/><path d='M50 10 C25 10 15 35 15 60 C15 80 25 95 50 95 C75 95 85 80 85 60 C85 35 75 10 50 10 Z' fill='%23111122' stroke='%232a2a3a' stroke-width='2'/><path d='M50 15 C35 15 25 30 25 50 C25 65 35 80 50 80 C65 80 75 65 75 50 C75 30 65 15 50 15 Z' fill='%231a1a2e'/><ellipse cx='50' cy='50' rx='20' ry='25' fill='%2305050a' stroke='%238b5cf6' stroke-width='1.5'/><path d='M35 45 L45 45 M55 45 L65 45' stroke='%2300e5ff' stroke-width='3' stroke-linecap='round'/><circle cx='40' cy='45' r='2' fill='%2300e5ff'/><circle cx='60' cy='45' r='2' fill='%2300e5ff'/><path d='M45 55 L55 55 L50 65 Z' fill='%23ff2d75'/><circle cx='50' cy='50' r='45' fill='none' stroke='%238b5cf6' stroke-width='1' opacity='0.5'/></svg>" alt="Froste">
         </div>
         <h4>Froste</h4>
         <span class="role">Founder / OSINT</span>
@@ -1334,7 +1380,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
       <!-- Creator: Maxwell -->
       <article class="member reveal" style="--c1:#ff2d75;--c2:#8b5cf6">
         <div class="avatar">
-          <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%230a0a13'/><path d='M50 15 C30 15 20 35 20 55 C20 70 30 85 50 85 C70 85 80 70 80 55 C80 35 70 15 50 15 Z' fill='%23111122' stroke='%23ff2d75' stroke-width='2'/><path d='M50 30 C40 30 32 40 32 50 C32 60 40 70 50 70 C60 70 68 60 68 50 C68 40 60 30 50 30 Z' fill='%231a1a2e' stroke='%2300e5ff' stroke-width='1.5'/><path d='M38 45 L46 45 M54 45 L62 45' stroke='%2300e5ff' stroke-width='2.5' stroke-linecap='round'/><text x='50' y='62' font-family='monospace' font-size='10' fill='%23ff2d75' text-anchor='middle' font-weight='bold'>ANON</text><circle cx='50' cy='50' r='45' fill='none' stroke='%23ff2d75' stroke-width='1' opacity='0.5'/></svg>" alt="Maxwell">
+          <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%230a0a13'/><path d='M50 10 C25 10 15 35 15 60 C15 80 25 95 50 95 C75 95 85 80 85 60 C85 35 75 10 50 10 Z' fill='%23111122' stroke='%232a2a3a' stroke-width='2'/><path d='M50 15 C35 15 25 30 25 50 C25 65 35 80 50 80 C65 80 75 65 75 50 C75 30 65 15 50 15 Z' fill='%231a1a2e'/><ellipse cx='50' cy='50' rx='20' ry='25' fill='%2305050a' stroke='%23ff2d75' stroke-width='1.5'/><path d='M35 45 L45 45 M55 45 L65 45' stroke='%2300e5ff' stroke-width='3' stroke-linecap='round'/><circle cx='40' cy='45' r='2' fill='%2300e5ff'/><circle cx='60' cy='45' r='2' fill='%2300e5ff'/><path d='M45 55 L55 55 L50 65 Z' fill='%23ff2d75'/><circle cx='50' cy='50' r='45' fill='none' stroke='%23ff2d75' stroke-width='1' opacity='0.5'/></svg>" alt="Maxwell">
         </div>
         <h4>Maxwell</h4>
         <span class="role">Lead Developer / Crypt</span>
@@ -1352,7 +1398,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
       <!-- New Developer: Anony Mous -->
       <article class="member reveal" style="--c1:#22ff88;--c2:#8b5cf6">
         <div class="avatar">
-          <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%230a0a13'/><path d='M50 15 C30 15 20 35 20 55 C20 70 30 85 50 85 C70 85 80 70 80 55 C80 35 70 15 50 15 Z' fill='%23111122' stroke='%2322ff88' stroke-width='2'/><path d='M50 30 C40 30 32 40 32 50 C32 60 40 70 50 70 C60 70 68 60 68 50 C68 40 60 30 50 30 Z' fill='%231a1a2e' stroke='%2300e5ff' stroke-width='1.5'/><path d='M38 45 L46 45 M54 45 L62 45' stroke='%2300e5ff' stroke-width='2.5' stroke-linecap='round'/><text x='50' y='62' font-family='monospace' font-size='10' fill='%23ff2d75' text-anchor='middle' font-weight='bold'>ANON</text><circle cx='50' cy='50' r='45' fill='none' stroke='%2322ff88' stroke-width='1' opacity='0.5'/></svg>" alt="Anony Mous">
+          <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%230a0a13'/><path d='M50 10 C25 10 15 35 15 60 C15 80 25 95 50 95 C75 95 85 80 85 60 C85 35 75 10 50 10 Z' fill='%23111122' stroke='%232a2a3a' stroke-width='2'/><path d='M50 15 C35 15 25 30 25 50 C25 65 35 80 50 80 C65 80 75 65 75 50 C75 30 65 15 50 15 Z' fill='%231a1a2e'/><ellipse cx='50' cy='50' rx='20' ry='25' fill='%2305050a' stroke='%2322ff88' stroke-width='1.5'/><path d='M35 45 L45 45 M55 45 L65 45' stroke='%2300e5ff' stroke-width='3' stroke-linecap='round'/><circle cx='40' cy='45' r='2' fill='%2300e5ff'/><circle cx='60' cy='45' r='2' fill='%2300e5ff'/><path d='M45 55 L55 55 L50 65 Z' fill='%23ff2d75'/><circle cx='50' cy='50' r='45' fill='none' stroke='%2322ff88' stroke-width='1' opacity='0.5'/></svg>" alt="Anony Mous">
         </div>
         <h4>Anony Mous</h4>
         <span class="role">Developer / Beta</span>
@@ -1760,6 +1806,27 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
       </section>
 
     </main>
+  </div>
+</div>
+
+<!-- ============================================================
+     CONFIRMATION MODAL (Admin Subscriber Actions)
+     ============================================================ -->
+<div class="confirm-modal" id="confirmModal" aria-hidden="true">
+  <div class="confirm-card">
+    <h3>Send Confirmation</h3>
+    <p>How would you like to send the welcome email to this subscriber?</p>
+    <div class="confirm-actions">
+      <button type="button" class="btn-admin primary" id="sendManualBtn">
+        Send Manually (via Email Client)
+      </button>
+      <button type="button" class="btn-admin" id="sendAutoBtn">
+        Send Automatically (via EmailJS)
+      </button>
+      <button type="button" class="btn-admin ghost" id="closeConfirmModal" style="margin-top:8px;">
+        Cancel
+      </button>
+    </div>
   </div>
 </div>
 
@@ -2313,11 +2380,15 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
      15. SUBSCRIBERS SYSTEM
      ============================================================ */
   const SUB_KEY = 'cod_subscribers_v1';
+  const BANNED_KEY = 'cod_banned_subs_v1';
   let subscribers = [];
+  let bannedSubs = [];
 
   function loadSubscribers() {
     try { subscribers = JSON.parse(localStorage.getItem(SUB_KEY)) || []; }
     catch { subscribers = []; }
+    try { bannedSubs = JSON.parse(localStorage.getItem(BANNED_KEY)) || []; }
+    catch { bannedSubs = []; }
     updateSubCountUI();
   }
 
@@ -2325,6 +2396,11 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
     // Basic email regex validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
     if (!emailRegex.test(email)) return false;
+
+    // Check if banned
+    if (bannedSubs.some(s => s.email.toLowerCase() === email.toLowerCase())) {
+      return 'banned';
+    }
 
     // Check for duplicates
     if (subscribers.some(s => s.email.toLowerCase() === email.toLowerCase())) {
@@ -2387,6 +2463,11 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
         statusEl.textContent = 'ℹ Already a member.';
         statusEl.style.color = 'var(--accent-2)';
         statusEl.style.display = 'block';
+      } else if (result === 'banned') {
+        statusEl.textContent = '⚠ You have been banned from subscribing.';
+        statusEl.style.color = 'var(--accent-3)';
+        statusEl.style.display = 'block';
+        input.style.borderColor = 'var(--accent-3)';
       } else {
         statusEl.textContent = '⚠ Invalid email.';
         statusEl.style.color = 'var(--accent-3)';
@@ -2543,6 +2624,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
   const gateErr  = $('#gateError');
   const gateBtn  = $('#gateSubmit');
   const panel    = $('#adminPanel');
+  const confirmModal = $('#confirmModal');
 
   function openGate() {
     gate.classList.add('open');
@@ -2608,6 +2690,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
       else openGate();
     }
     if (e.key === 'Escape' && gate.classList.contains('open')) closeGate();
+    if (e.key === 'Escape' && confirmModal.classList.contains('open')) confirmModal.classList.remove('open');
   });
 
   // Secret: click the logo mark 5 times within 2 seconds
@@ -2842,6 +2925,8 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
   renderAdminRequests();
 
   /* ---------- 27. ADMIN SUBSCRIBERS MANAGEMENT ---------- */
+  let currentConfirmEmail = null;
+
   function renderAdminSubscribers() {
     const wrap = $('#adminSubscribers');
     if (!wrap) return;
@@ -2852,7 +2937,6 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
     }
 
     wrap.innerHTML = subscribers.map((s, index) => {
-      const mailtoLink = `mailto:${escapeAttr(s.email)}?subject=${encodeURIComponent('Welcome to Code of Darkness')}&body=${encodeURIComponent('Hello,\n\nThank you for subscribing to Code of Darkness. You are now a member.\n\nStay in the dark,\nCode of Darkness Team')}`;
       const dateStr = new Date(s.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' });
       return `
         <div class="admin-tool-row" style="justify-content:space-between;">
@@ -2864,12 +2948,92 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
             </div>
           </div>
           <div style="display:flex;gap:8px;">
-            <a href="${mailtoLink}" class="btn-admin" style="font-size:.7rem;padding:8px 16px;">Send Confirmation</a>
+            <button type="button" class="btn-admin" style="font-size:.7rem;padding:8px 16px;" data-confirm="${escapeAttr(s.email)}">Send Confirmation</button>
+            <button type="button" class="btn-admin danger" style="font-size:.7rem;padding:8px 16px;" data-ban="${escapeAttr(s.email)}">Ban</button>
           </div>
         </div>
       `;
     }).join('');
   }
+
+  // Event listeners for subscribers (Send Confirmation & Ban)
+  $('#adminSubscribers') && $('#adminSubscribers').addEventListener('click', (e) => {
+    const confirmBtn = e.target.closest('[data-confirm]');
+    if (confirmBtn) {
+      currentConfirmEmail = confirmBtn.dataset.confirm;
+      confirmModal.classList.add('open');
+      confirmModal.setAttribute('aria-hidden', 'false');
+      return;
+    }
+
+    const banBtn = e.target.closest('[data-ban]');
+    if (banBtn) {
+      const email = banBtn.dataset.ban;
+      if (!confirm(`Ban subscriber ${email}? They will be removed and unable to subscribe again.`)) return;
+
+      // Remove from subscribers
+      subscribers = subscribers.filter(s => s.email.toLowerCase() !== email.toLowerCase());
+      // Add to banned list
+      if (!bannedSubs.some(s => s.email.toLowerCase() === email.toLowerCase())) {
+        bannedSubs.push({ email: email, date: new Date().toISOString() });
+      }
+
+      try {
+        localStorage.setItem(SUB_KEY, JSON.stringify(subscribers));
+        localStorage.setItem(BANNED_KEY, JSON.stringify(bannedSubs));
+        updateSubCountUI();
+        renderAdminSubscribers();
+      } catch (err) {
+        alert('Error saving data. Please try again.');
+      }
+    }
+  });
+
+  // Confirm Modal Actions
+  $('#closeConfirmModal') && $('#closeConfirmModal').addEventListener('click', () => {
+    confirmModal.classList.remove('open');
+    confirmModal.setAttribute('aria-hidden', 'true');
+    currentConfirmEmail = null;
+  });
+
+  $('#sendManualBtn') && $('#sendManualBtn').addEventListener('click', () => {
+    if (!currentConfirmEmail) return;
+    const mailtoLink = `mailto:${escapeAttr(currentConfirmEmail)}?subject=${encodeURIComponent('Welcome to Code of Darkness')}&body=${encodeURIComponent('Hello,\n\nThank you for subscribing to Code of Darkness. You are now a member.\n\nStay in the dark,\nCode of Darkness Team')}`;
+    window.location.href = mailtoLink;
+    confirmModal.classList.remove('open');
+    confirmModal.setAttribute('aria-hidden', 'true');
+    currentConfirmEmail = null;
+  });
+
+  $('#sendAutoBtn') && $('#sendAutoBtn').addEventListener('click', () => {
+    if (!currentConfirmEmail) return;
+    const ejConfig = JSON.parse(localStorage.getItem('cod_emailjs_v1')) || {};
+    if (!ejConfig.publicKey || !ejConfig.serviceId || !ejConfig.templateAuto) {
+      alert('EmailJS is not configured. Please configure it first.');
+      confirmModal.classList.remove('open');
+      confirmModal.setAttribute('aria-hidden', 'true');
+      currentConfirmEmail = null;
+      return;
+    }
+    emailjs.init(ejConfig.publicKey);
+    const welcomeParams = {
+      to_email: currentConfirmEmail,
+      from_name: 'Code of Darkness',
+      message: 'Thank you for subscribing. You are now a member.',
+      reply_to: 'wmax8808@gmail.com'
+    };
+    emailjs.send(ejConfig.serviceId, ejConfig.templateAuto, welcomeParams)
+      .then(() => {
+        alert('Confirmation email sent successfully!');
+        confirmModal.classList.remove('open');
+        confirmModal.setAttribute('aria-hidden', 'true');
+        currentConfirmEmail = null;
+      })
+      .catch((err) => {
+        alert('Failed to send email. Check console for details.');
+        console.error(err);
+      });
+  });
 
   // Load subscribers initially if the tab is active
   renderAdminSubscribers();
