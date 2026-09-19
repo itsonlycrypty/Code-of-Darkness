@@ -2952,10 +2952,10 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
       }
       emailjs.init(config.publicKey);
       const testParams = {
-        to_email: 'wmax8808@gmail.com', // Replace with admin email for a real test
+        to_email: 'test@example.com', // Replace with admin email for a real test
         from_name: 'Test User',
         message: 'This is a test email from Code of Darkness Admin Console.',
-        reply_to: wmax8808@gmail.com'
+        reply_to: 'hello@codeofdarkness.dev'
       };
       emailjs.send(config.serviceId, config.templateAuto, testParams)
         .then(() => alert('Test email sent successfully! Check your inbox.'))
