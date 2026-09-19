@@ -2301,7 +2301,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
           to_email: email.value.trim(),
           from_name: name.value.trim(),
           message: message.value.trim(),
-          reply_to: 'hello@codeofdarkness.dev'
+          reply_to: 'wmax8808@gmail.com'
         };
         emailjs.send(ejConfig.serviceId, ejConfig.templateAuto, autoParams)
           .then(() => console.log('Auto-reply sent to user.'))
@@ -2314,7 +2314,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
             from_email: email.value.trim(),
             subject: $('#subject').value,
             message: message.value.trim(),
-            to_email: 'hello@codeofdarkness.dev' // Change this to your admin email
+            to_email: 'wmax8808@gmail.com'
           };
           emailjs.send(ejConfig.serviceId, ejConfig.templateAdmin, adminParams)
             .then(() => console.log('Admin notification sent.'))
@@ -2411,7 +2411,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
             to_email: email,
             from_name: 'Code of Darkness',
             message: 'Thank you for subscribing. You are now a member.',
-            reply_to: 'hello@codeofdarkness.dev'
+            reply_to: 'wmax8808@gmail.com'
           };
           emailjs.send(ejConfig.serviceId, ejConfig.templateAuto, welcomeParams)
             .then(() => console.log('Welcome email sent.'))
@@ -2952,10 +2952,10 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
       }
       emailjs.init(config.publicKey);
       const testParams = {
-        to_email: 'test@example.com', // Replace with admin email for a real test
+        to_email: 'wmax8808@gmail.com', // Now sending to your real email!
         from_name: 'Test User',
         message: 'This is a test email from Code of Darkness Admin Console.',
-        reply_to: 'hello@codeofdarkness.dev'
+        reply_to: 'wmax8808@gmail.com'
       };
       emailjs.send(config.serviceId, config.templateAuto, testParams)
         .then(() => alert('Test email sent successfully! Check your inbox.'))
