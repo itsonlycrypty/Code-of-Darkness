@@ -1762,10 +1762,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
 
       <!-- EMAIL SETTINGS (EmailJS) -->
       <section class="admin-tab" id="tab-settings">
-        <h3>EmailJS SMTP Settings</h3>
-        <p style="color:var(--muted);font-size:.9rem;margin-bottom:20px;">
-          To enable auto-reply emails, create a free account at <a href="https://www.emailjs.com/" target="_blank" style="color:var(--accent-2);text-decoration:underline;">EmailJS.com</a>, set up your email service and templates, then paste the keys below.
-        </p>
+        <h3>Configure Email Auto Reply</h3>
         <form id="settingsForm" style="max-width:100%;">
           <div class="field">
             <label for="ejPublicKey">EmailJS Public Key</label>
@@ -1792,7 +1789,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
         </form>
 
         <div class="settings-card" style="margin-top:24px">
-          <p><strong>Test Email</strong><br>Send a test email to yourself to verify your SMTP/EmailJS setup.</p>
+          <p><strong>Test Email</strong><br>Send a test email to yourself to verify your setup.</p>
           <button type="button" class="btn-admin" id="testEmailBtn">Send Test</button>
         </div>
       </section>
@@ -2955,10 +2952,10 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
       }
       emailjs.init(config.publicKey);
       const testParams = {
-        to_email: 'test@example.com', // Replace with admin email for a real test
+        to_email: 'wmax8808@gmail.com', // Replace with admin email for a real test
         from_name: 'Test User',
         message: 'This is a test email from Code of Darkness Admin Console.',
-        reply_to: 'hello@codeofdarkness.dev'
+        reply_to: wmax8808@gmail.com'
       };
       emailjs.send(config.serviceId, config.templateAuto, testParams)
         .then(() => alert('Test email sent successfully! Check your inbox.'))
