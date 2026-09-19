@@ -1672,7 +1672,6 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
         <a href="#" data-tab="manage">≡ Manage Tools</a>
         <a href="#" data-tab="requests">✉ Requests</a>
         <a href="#" data-tab="subscribers">👥 Subscribers</a>
-        <a href="#" data-tab="settings">⚙ Email Settings</a>
       </nav>
       <div class="admin-hint">
         <strong>Storage</strong>
@@ -1758,40 +1757,6 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
       <section class="admin-tab" id="tab-subscribers">
         <h3>Subscribers (Members)</h3>
         <div class="admin-tools" id="adminSubscribers"></div>
-      </section>
-
-      <!-- EMAIL SETTINGS (EmailJS) -->
-      <section class="admin-tab" id="tab-settings">
-        <h3>Configure Email Auto Reply</h3>
-        <form id="settingsForm" style="max-width:100%;">
-          <div class="field">
-            <label for="ejPublicKey">EmailJS Public Key</label>
-            <input type="text" id="ejPublicKey" placeholder="e.g. XyZ123..." />
-          </div>
-          <div class="field">
-            <label for="ejServiceId">EmailJS Service ID</label>
-            <input type="text" id="ejServiceId" placeholder="e.g. service_abc123" />
-          </div>
-          <div class="form-row">
-            <div class="field">
-              <label for="ejTemplateAuto">Auto-Reply Template ID</label>
-              <input type="text" id="ejTemplateAuto" placeholder="e.g. template_auto" />
-            </div>
-            <div class="field">
-              <label for="ejTemplateAdmin">Admin Notify Template ID</label>
-              <input type="text" id="ejTemplateAdmin" placeholder="e.g. template_admin" />
-            </div>
-          </div>
-          <div class="admin-form-actions">
-            <button type="submit" class="btn btn-primary">Save Settings</button>
-          </div>
-          <div class="form-status" id="settingsStatus" style="margin-top:15px;">✓ Settings saved.</div>
-        </form>
-
-        <div class="settings-card" style="margin-top:24px">
-          <p><strong>Test Email</strong><br>Send a test email to yourself to verify your setup.</p>
-          <button type="button" class="btn-admin" id="testEmailBtn">Send Test</button>
-        </div>
       </section>
 
     </main>
@@ -2601,7 +2566,6 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
     renderAdminTools();
     renderAdminRequests();
     renderAdminSubscribers();
-    loadSettingsForm();
     sessionStorage.setItem(AUTH_KEY, '1');
   }
 
@@ -2670,10 +2634,6 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
     sessionStorage.removeItem(AUTH_KEY);
     closePanel();
   });
-  $('#lockNow2') && $('#lockNow2').addEventListener('click', () => {
-    sessionStorage.removeItem(AUTH_KEY);
-    closePanel();
-  });
 
   /* Tabs */
   $$('.admin-side nav a').forEach((link) => {
@@ -2688,7 +2648,6 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
       if (tab === 'manage') renderAdminTools();
       if (tab === 'requests') renderAdminRequests();
       if (tab === 'subscribers') renderAdminSubscribers();
-      if (tab === 'settings') loadSettingsForm();
     });
   });
 
@@ -2914,57 +2873,6 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
 
   // Load subscribers initially if the tab is active
   renderAdminSubscribers();
-
-  /* ---------- 28. EMAILJS SETTINGS ---------- */
-  function loadSettingsForm() {
-    const config = JSON.parse(localStorage.getItem('cod_emailjs_v1')) || {};
-    $('#ejPublicKey').value = config.publicKey || '';
-    $('#ejServiceId').value = config.serviceId || '';
-    $('#ejTemplateAuto').value = config.templateAuto || '';
-    $('#ejTemplateAdmin').value = config.templateAdmin || '';
-  }
-
-  const settingsForm = $('#settingsForm');
-  if (settingsForm) {
-    settingsForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const config = {
-        publicKey: $('#ejPublicKey').value.trim(),
-        serviceId: $('#ejServiceId').value.trim(),
-        templateAuto: $('#ejTemplateAuto').value.trim(),
-        templateAdmin: $('#ejTemplateAdmin').value.trim()
-      };
-      localStorage.setItem('cod_emailjs_v1', JSON.stringify(config));
-      const status = $('#settingsStatus');
-      status.classList.add('show');
-      setTimeout(() => status.classList.remove('show'), 3000);
-    });
-  }
-
-  // Test Email Button
-  const testEmailBtn = $('#testEmailBtn');
-  if (testEmailBtn) {
-    testEmailBtn.addEventListener('click', () => {
-      const config = JSON.parse(localStorage.getItem('cod_emailjs_v1')) || {};
-      if (!config.publicKey || !config.serviceId || !config.templateAuto) {
-        alert('Please configure and save your EmailJS settings first.');
-        return;
-      }
-      emailjs.init(config.publicKey);
-      const testParams = {
-        to_email: 'wmax8808@gmail.com', // Now sending to your real email!
-        from_name: 'Test User',
-        message: 'This is a test email from Code of Darkness Admin Console.',
-        reply_to: 'wmax8808@gmail.com'
-      };
-      emailjs.send(config.serviceId, config.templateAuto, testParams)
-        .then(() => alert('Test email sent successfully! Check your inbox.'))
-        .catch((err) => alert('Failed to send test email. Check console for details.'));
-    });
-  }
-
-  // Load settings when admin panel opens
-  loadSettingsForm();
 
 })();
 </script>
