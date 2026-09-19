@@ -17,6 +17,9 @@
 
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%2305050a'/%3E%3Ctext x='50' y='68' font-size='54' font-family='monospace' fill='%238b5cf6' text-anchor='middle'%3E%E2%97%88%3C/text%3E%3C/svg%3E" />
 
+<!-- EmailJS Library -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
 <style>
 /* ============================================================
    0. DESIGN TOKENS
@@ -1669,7 +1672,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
         <a href="#" data-tab="manage">≡ Manage Tools</a>
         <a href="#" data-tab="requests">✉ Requests</a>
         <a href="#" data-tab="subscribers">👥 Subscribers</a>
-        <a href="#" data-tab="settings">⚙ Settings</a>
+        <a href="#" data-tab="settings">⚙ Email Settings</a>
       </nav>
       <div class="admin-hint">
         <strong>Storage</strong>
@@ -1757,16 +1760,40 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
         <div class="admin-tools" id="adminSubscribers"></div>
       </section>
 
-      <!-- SETTINGS -->
+      <!-- EMAIL SETTINGS (EmailJS) -->
       <section class="admin-tab" id="tab-settings">
-        <h3>Console settings</h3>
-        <div class="settings-card">
-          <p><strong>Danger zone</strong><br>Permanently removes all tools from this browser.</p>
-          <button type="button" class="btn-admin danger" id="clearAll">Delete all tools</button>
-        </div>
-        <div class="settings-card" style="margin-top:16px">
-          <p><strong>Session</strong><br>End the current administrator session.</p>
-          <button type="button" class="btn-admin" id="lockNow2">Lock console</button>
+        <h3>EmailJS SMTP Settings</h3>
+        <p style="color:var(--muted);font-size:.9rem;margin-bottom:20px;">
+          To enable auto-reply emails, create a free account at <a href="https://www.emailjs.com/" target="_blank" style="color:var(--accent-2);text-decoration:underline;">EmailJS.com</a>, set up your email service and templates, then paste the keys below.
+        </p>
+        <form id="settingsForm" style="max-width:100%;">
+          <div class="field">
+            <label for="ejPublicKey">EmailJS Public Key</label>
+            <input type="text" id="ejPublicKey" placeholder="e.g. XyZ123..." />
+          </div>
+          <div class="field">
+            <label for="ejServiceId">EmailJS Service ID</label>
+            <input type="text" id="ejServiceId" placeholder="e.g. service_abc123" />
+          </div>
+          <div class="form-row">
+            <div class="field">
+              <label for="ejTemplateAuto">Auto-Reply Template ID</label>
+              <input type="text" id="ejTemplateAuto" placeholder="e.g. template_auto" />
+            </div>
+            <div class="field">
+              <label for="ejTemplateAdmin">Admin Notify Template ID</label>
+              <input type="text" id="ejTemplateAdmin" placeholder="e.g. template_admin" />
+            </div>
+          </div>
+          <div class="admin-form-actions">
+            <button type="submit" class="btn btn-primary">Save Settings</button>
+          </div>
+          <div class="form-status" id="settingsStatus" style="margin-top:15px;">✓ Settings saved.</div>
+        </form>
+
+        <div class="settings-card" style="margin-top:24px">
+          <p><strong>Test Email</strong><br>Send a test email to yourself to verify your SMTP/EmailJS setup.</p>
+          <button type="button" class="btn-admin" id="testEmailBtn">Send Test</button>
         </div>
       </section>
 
@@ -2219,7 +2246,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
     };
   })();
 
-  /* ---------- 14. CONTACT FORM ---------- */
+  /* ---------- 14. CONTACT FORM (With EmailJS) ---------- */
   (function form() {
     const form = $('#contactForm');
     if (!form) return;
@@ -2266,6 +2293,39 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
       try { requests = JSON.parse(localStorage.getItem('cod_requests_v1')) || []; } catch {}
       requests.unshift(newRequest);
       localStorage.setItem('cod_requests_v1', JSON.stringify(requests));
+
+      // Send via EmailJS if configured
+      const ejConfig = JSON.parse(localStorage.getItem('cod_emailjs_v1')) || {};
+      if (ejConfig.publicKey && ejConfig.serviceId && ejConfig.templateAuto) {
+        emailjs.init(ejConfig.publicKey);
+        
+        // Send Auto-Reply to User
+        const autoParams = {
+          to_email: email.value.trim(),
+          from_name: name.value.trim(),
+          message: message.value.trim(),
+          reply_to: 'hello@codeofdarkness.dev'
+        };
+        emailjs.send(ejConfig.serviceId, ejConfig.templateAuto, autoParams)
+          .then(() => console.log('Auto-reply sent to user.'))
+          .catch((err) => console.error('Auto-reply failed:', err));
+
+        // Send Notification to Admin
+        if (ejConfig.templateAdmin) {
+          const adminParams = {
+            from_name: name.value.trim(),
+            from_email: email.value.trim(),
+            subject: $('#subject').value,
+            message: message.value.trim(),
+            to_email: 'hello@codeofdarkness.dev' // Change this to your admin email
+          };
+          emailjs.send(ejConfig.serviceId, ejConfig.templateAdmin, adminParams)
+            .then(() => console.log('Admin notification sent.'))
+            .catch((err) => console.error('Admin notification failed:', err));
+        }
+      } else {
+        console.warn('EmailJS not configured. Skipping email send.');
+      }
 
       const btn = form.querySelector('button[type="submit"]');
       const original = btn.innerHTML;
@@ -2345,6 +2405,22 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
         statusEl.textContent = '✓ Subscribed. Welcome to the dark.';
         statusEl.style.color = 'var(--accent-4)';
         statusEl.style.display = 'block';
+
+        // Send Welcome Email via EmailJS if configured
+        const ejConfig = JSON.parse(localStorage.getItem('cod_emailjs_v1')) || {};
+        if (ejConfig.publicKey && ejConfig.serviceId && ejConfig.templateAuto) {
+          emailjs.init(ejConfig.publicKey);
+          const welcomeParams = {
+            to_email: email,
+            from_name: 'Code of Darkness',
+            message: 'Thank you for subscribing. You are now a member.',
+            reply_to: 'hello@codeofdarkness.dev'
+          };
+          emailjs.send(ejConfig.serviceId, ejConfig.templateAuto, welcomeParams)
+            .then(() => console.log('Welcome email sent.'))
+            .catch((err) => console.error('Welcome email failed:', err));
+        }
+
       } else if (result === 'duplicate') {
         statusEl.textContent = 'ℹ Already a member.';
         statusEl.style.color = 'var(--accent-2)';
@@ -2528,6 +2604,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
     renderAdminTools();
     renderAdminRequests();
     renderAdminSubscribers();
+    loadSettingsForm();
     sessionStorage.setItem(AUTH_KEY, '1');
   }
 
@@ -2614,6 +2691,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
       if (tab === 'manage') renderAdminTools();
       if (tab === 'requests') renderAdminRequests();
       if (tab === 'subscribers') renderAdminSubscribers();
+      if (tab === 'settings') loadSettingsForm();
     });
   });
 
@@ -2839,6 +2917,57 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
 
   // Load subscribers initially if the tab is active
   renderAdminSubscribers();
+
+  /* ---------- 28. EMAILJS SETTINGS ---------- */
+  function loadSettingsForm() {
+    const config = JSON.parse(localStorage.getItem('cod_emailjs_v1')) || {};
+    $('#ejPublicKey').value = config.publicKey || '';
+    $('#ejServiceId').value = config.serviceId || '';
+    $('#ejTemplateAuto').value = config.templateAuto || '';
+    $('#ejTemplateAdmin').value = config.templateAdmin || '';
+  }
+
+  const settingsForm = $('#settingsForm');
+  if (settingsForm) {
+    settingsForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const config = {
+        publicKey: $('#ejPublicKey').value.trim(),
+        serviceId: $('#ejServiceId').value.trim(),
+        templateAuto: $('#ejTemplateAuto').value.trim(),
+        templateAdmin: $('#ejTemplateAdmin').value.trim()
+      };
+      localStorage.setItem('cod_emailjs_v1', JSON.stringify(config));
+      const status = $('#settingsStatus');
+      status.classList.add('show');
+      setTimeout(() => status.classList.remove('show'), 3000);
+    });
+  }
+
+  // Test Email Button
+  const testEmailBtn = $('#testEmailBtn');
+  if (testEmailBtn) {
+    testEmailBtn.addEventListener('click', () => {
+      const config = JSON.parse(localStorage.getItem('cod_emailjs_v1')) || {};
+      if (!config.publicKey || !config.serviceId || !config.templateAuto) {
+        alert('Please configure and save your EmailJS settings first.');
+        return;
+      }
+      emailjs.init(config.publicKey);
+      const testParams = {
+        to_email: 'test@example.com', // Replace with admin email for a real test
+        from_name: 'Test User',
+        message: 'This is a test email from Code of Darkness Admin Console.',
+        reply_to: 'hello@codeofdarkness.dev'
+      };
+      emailjs.send(config.serviceId, config.templateAuto, testParams)
+        .then(() => alert('Test email sent successfully! Check your inbox.'))
+        .catch((err) => alert('Failed to send test email. Check console for details.'));
+    });
+  }
+
+  // Load settings when admin panel opens
+  loadSettingsForm();
 
 })();
 </script>
