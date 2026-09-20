@@ -510,6 +510,24 @@ section{position:relative;padding:120px 0;scroll-margin-top:90px}
 .comment-card .meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-family:var(--f-mono);font-size:.72rem;color:var(--dim);}
 .comment-card .meta strong{color:var(--accent-2);font-size:.8rem;}
 .comment-card p{color:var(--muted);font-size:.9rem;line-height:1.6;}
+.comment-card .admin-reply {
+  margin-top: 12px;
+  padding: 10px 14px;
+  background: rgba(139,92,246,.08);
+  border-left: 2px solid var(--accent);
+  border-radius: 0 8px 8px 0;
+  font-size: .85rem;
+  color: var(--txt);
+}
+.comment-card .admin-reply strong {
+  color: var(--accent);
+  font-family: var(--f-mono);
+  font-size: .7rem;
+  display: block;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+}
 .no-comments{text-align:center;padding:50px 20px;color:var(--dim);font-family:var(--f-mono);font-size:.8rem;border:1px dashed var(--line);border-radius:var(--radius-sm);}
 
 /* ============================================================
@@ -1556,6 +1574,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
       <nav>
         <a href="#" class="active" data-tab="add">＋ Add Tool</a>
         <a href="#" data-tab="manage">≡ Manage Tools</a>
+        <a href="#" data-tab="comments">💬 Comments</a>
         <a href="#" data-tab="requests">✉ Requests</a>
         <a href="#" data-tab="subscribers">👥 Subscribers</a>
       </nav>
@@ -1631,6 +1650,12 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
       <section class="admin-tab" id="tab-manage">
         <h3>Active tools</h3>
         <div class="admin-tools" id="adminTools"></div>
+      </section>
+
+      <!-- COMMENTS -->
+      <section class="admin-tab" id="tab-comments">
+        <h3>Manage Comments</h3>
+        <div class="admin-tools" id="adminComments"></div>
       </section>
 
       <!-- REQUESTS -->
@@ -1975,31 +2000,8 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
     });
   })();
 
-  /* ---------- 11. WORK FILTER ---------- */
-  (function filter() {
-    const buttons = $$('.filter');
-    const items = $$('.work-item');
-    if (!items.length) return;
-    buttons.forEach((btn) => {
-      btn.addEventListener('click', () => {
-        buttons.forEach((b) => b.classList.remove('active'));
-        btn.classList.add('active');
-        const f = btn.dataset.filter;
-        items.forEach((item) => {
-          const show = f === 'all' || item.dataset.cat === f;
-          item.classList.toggle('hide', !show);
-          if (show) {
-            item.style.animation = 'none';
-            void item.offsetWidth;
-            item.style.animation = 'fadeUp .5s cubic-bezier(.16,1,.3,1) both';
-          }
-        });
-      });
-    });
-  })();
-
   /* ============================================================
-     12. COMMENTS SYSTEM
+     11. COMMENTS SYSTEM
      ============================================================ */
   const COMMENT_KEY = 'cod_comments_v1';
   const commentsList = $('#commentsList');
@@ -2033,6 +2035,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
           <span>${new Date(c.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
         </div>
         <p>${escapeHtml(c.message)}</p>
+        ${c.adminReply ? `<div class="admin-reply"><strong>Admin Reply</strong>${escapeHtml(c.adminReply)}</div>` : ''}
       </div>
     `).join('');
   }
@@ -2068,7 +2071,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
 
   loadComments();
 
-  /* ---------- 13. CAPTCHA ---------- */
+  /* ---------- 12. CAPTCHA ---------- */
   const Captcha = (function () {
     const el = $('#captcha');
     const box = $('#captchaBox');
@@ -2116,7 +2119,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
     };
   })();
 
-  /* ---------- 14. CONTACT FORM (With EmailJS) ---------- */
+  /* ---------- 13. CONTACT FORM (With EmailJS) ---------- */
   (function form() {
     const form = $('#contactForm');
     if (!form) return;
@@ -2218,7 +2221,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
   })();
 
   /* ============================================================
-     15. SUBSCRIBERS SYSTEM
+     14. SUBSCRIBERS SYSTEM
      ============================================================ */
   const SUB_KEY = 'cod_subscribers_v1';
   const BANNED_KEY = 'cod_banned_subs_v1';
@@ -2326,7 +2329,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
   // Load subscribers on start
   loadSubscribers();
 
-  /* ---------- 16. SMOOTH ANCHORS ---------- */
+  /* ---------- 15. SMOOTH ANCHORS ---------- */
   $$('a[href^="#"]').forEach((a) => {
     a.addEventListener('click', (e) => {
       const id = a.getAttribute('href');
@@ -2340,7 +2343,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
   });
 
   /* ============================================================
-     17. TOOLS STORE
+     16. TOOLS STORE
      ============================================================ */
   const TOOL_KEY = 'cod_tools_v1';
   let tools = [];
@@ -2359,7 +2362,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
     }
   }
 
-  /* ---------- 18. RENDER TOOLS ON SITE ---------- */
+  /* ---------- 17. RENDER TOOLS ON SITE ---------- */
   const toolsGrid  = $('#toolsGrid');
   const toolsEmpty = $('#toolsEmpty');
 
@@ -2409,7 +2412,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
     }
   });
 
-  /* ---------- 19. RENDER ADMIN TOOL LIST ---------- */
+  /* ---------- 18. RENDER ADMIN TOOL LIST ---------- */
   function renderAdminTools() {
     const wrap = $('#adminTools');
     if (!wrap) return;
@@ -2455,7 +2458,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
     if (persistTools()) { renderTools(); renderAdminTools(); }
   });
 
-  /* ---------- 20. ADMIN GATE ---------- */
+  /* ---------- 19. ADMIN GATE ---------- */
   const ADMIN_PASS = '3444';
   const AUTH_KEY   = 'cod_admin_session';
 
@@ -2489,6 +2492,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
     renderAdminTools();
     renderAdminRequests();
     renderAdminSubscribers();
+    renderAdminComments();
     sessionStorage.setItem(AUTH_KEY, '1');
   }
 
@@ -2522,7 +2526,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
   $('#gateClose') && $('#gateClose').addEventListener('click', closeGate);
   gate && gate.addEventListener('click', (e) => { if (e.target === gate) closeGate(); });
 
-  /* ---------- 21. ADMIN ACCESS TRIGGERS ---------- */
+  /* ---------- 20. ADMIN ACCESS TRIGGERS ---------- */
   // Keyboard: Ctrl + Shift + A
   document.addEventListener('keydown', (e) => {
     if (e.ctrlKey && e.shiftKey && (e.key === 'A' || e.key === 'a')) {
@@ -2552,7 +2556,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
     });
   })();
 
-  /* ---------- 22. ADMIN PANEL CONTROLS ---------- */
+  /* ---------- 21. ADMIN PANEL CONTROLS ---------- */
   $('#adminClose') && $('#adminClose').addEventListener('click', closePanel);
   $('#lockNow') && $('#lockNow').addEventListener('click', () => {
     sessionStorage.removeItem(AUTH_KEY);
@@ -2570,12 +2574,13 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
       const target = $('#tab-' + tab);
       if (target) target.classList.add('active');
       if (tab === 'manage') renderAdminTools();
+      if (tab === 'comments') renderAdminComments();
       if (tab === 'requests') renderAdminRequests();
       if (tab === 'subscribers') renderAdminSubscribers();
     });
   });
 
-  /* ---------- 23. ADMIN: TOOL FORM ---------- */
+  /* ---------- 22. ADMIN: TOOL FORM ---------- */
   (function toolForm() {
     const form = $('#toolForm');
     if (!form) return;
@@ -2688,7 +2693,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
     });
   })();
 
-  /* ---------- 24. CLEAR ALL ---------- */
+  /* ---------- 23. CLEAR ALL ---------- */
   $('#clearAll') && $('#clearAll').addEventListener('click', () => {
     if (!confirm('Delete ALL tools? This cannot be undone.')) return;
     tools = [];
@@ -2697,9 +2702,77 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
     renderAdminTools();
   });
 
-  /* ---------- 25. BOOTSTRAP TOOLS ---------- */
+  /* ---------- 24. BOOTSTRAP TOOLS ---------- */
   loadTools();
   renderTools();
+
+  /* ---------- 25. ADMIN COMMENTS MANAGEMENT ---------- */
+  function renderAdminComments() {
+    const wrap = $('#adminComments');
+    if (!wrap) return;
+    let comments = [];
+    try { comments = JSON.parse(localStorage.getItem(COMMENT_KEY)) || []; } catch {}
+
+    if (comments.length === 0) {
+      wrap.innerHTML = '<div style="padding:40px;text-align:center;border:1px dashed var(--line-hi);border-radius:14px;color:var(--dim);font-family:var(--f-mono);font-size:.8rem">No comments yet.</div>';
+      return;
+    }
+
+    wrap.innerHTML = comments.map(c => {
+      const dateStr = new Date(c.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+      return `
+        <div class="admin-tool-row" style="align-items:flex-start;flex-direction:column;gap:12px;padding:20px;">
+          <div style="display:flex;justify-content:space-between;width:100%;align-items:center;flex-wrap:wrap;gap:10px;">
+            <div>
+              <strong style="color:var(--accent-2);font-size:1rem;">${escapeHtml(c.name)}</strong>
+              <span style="font-family:var(--f-mono);font-size:.75rem;color:var(--dim);margin-left:10px;">${dateStr}</span>
+            </div>
+          </div>
+          <div style="font-size:.85rem;color:var(--txt);width:100%;line-height:1.6;background:rgba(0,0,0,.2);padding:12px;border-radius:8px;border:1px solid var(--line);">
+            ${escapeHtml(c.message)}
+            ${c.adminReply ? `<div style="margin-top:10px;padding-top:10px;border-top:1px dashed var(--line);"><span style="color:var(--accent);font-weight:bold;font-family:var(--f-mono);font-size:.75rem;">ADMIN REPLY:</span><br>${escapeHtml(c.adminReply)}</div>` : ''}
+          </div>
+          <div style="display:flex;gap:10px;width:100%;justify-content:flex-end;margin-top:8px;flex-wrap:wrap;">
+            <button type="button" class="btn-admin" style="font-size:.7rem;padding:8px 16px;" data-reply="${c.id}">Reply</button>
+            <button type="button" class="btn-admin danger" style="font-size:.7rem;padding:8px 16px;" data-del-comment="${c.id}">Delete</button>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // Event listeners for comments (Reply & Delete)
+  $('#adminComments') && $('#adminComments').addEventListener('click', (e) => {
+    const replyBtn = e.target.closest('[data-reply]');
+    if (replyBtn) {
+      const id = parseInt(replyBtn.dataset.reply);
+      let comments = JSON.parse(localStorage.getItem(COMMENT_KEY)) || [];
+      const comment = comments.find(x => x.id === id);
+      if (!comment) return;
+      
+      const replyText = prompt('Enter your reply to this comment:', comment.adminReply || '');
+      if (replyText !== null) {
+        comment.adminReply = replyText.trim();
+        localStorage.setItem(COMMENT_KEY, JSON.stringify(comments));
+        renderAdminComments();
+        renderComments(comments); // Update the frontend immediately
+      }
+    }
+
+    const delBtn = e.target.closest('[data-del-comment]');
+    if (delBtn) {
+      if (!confirm('Delete this comment?')) return;
+      const id = parseInt(delBtn.dataset.delComment);
+      let comments = JSON.parse(localStorage.getItem(COMMENT_KEY)) || [];
+      comments = comments.filter(x => x.id !== id);
+      localStorage.setItem(COMMENT_KEY, JSON.stringify(comments));
+      renderAdminComments();
+      renderComments(comments); // Update the frontend immediately
+    }
+  });
+
+  // Load comments initially if the tab is active
+  renderAdminComments();
 
   /* ---------- 26. ADMIN REQUESTS MANAGEMENT ---------- */
   function renderAdminRequests() {
