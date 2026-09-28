@@ -317,9 +317,6 @@ section{position:relative;padding:120px 0;scroll-margin-top:90px}
 @keyframes glitchTop{0%,88%,100%{transform:translate(0,0);opacity:0}90%{transform:translate(-4px,-3px);opacity:.9}93%{transform:translate(3px,2px);opacity:.7}96%{transform:translate(-2px,1px);opacity:.85}}
 @keyframes glitchBottom{0%,86%,100%{transform:translate(0,0);opacity:0}88%{transform:translate(4px,3px);opacity:.85}92%{transform:translate(-3px,-2px);opacity:.65}95%{transform:translate(2px,-1px);opacity:.8}}
 
-.typed-wrap{font-family:var(--f-mono);font-size:clamp(.85rem,2vw,1.15rem);color:var(--accent-2);letter-spacing:.02em;min-height:1.8em;margin-bottom:26px}
-.caret{display:inline-block;width:9px;height:1.05em;background:var(--accent-2);vertical-align:-.16em;margin-left:4px;animation:blink 1s steps(1) infinite}
-
 .hero p.lead{color:var(--muted);font-size:clamp(.95rem,1.6vw,1.08rem);max-width:640px;margin:0 auto 42px}
 .hero-actions{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:70px}
 
@@ -328,30 +325,7 @@ section{position:relative;padding:120px 0;scroll-margin-top:90px}
 .hero-strip span::before{content:"";width:4px;height:4px;background:var(--accent);border-radius:50%}
 
 /* ============================================================
-   10. MARQUEE
-   ============================================================ */
-.marquee{
-  border-top:1px solid var(--line);border-bottom:1px solid var(--line);
-  padding:22px 0;overflow:hidden;position:relative;z-index:3;
-  background:rgba(255,255,255,.012);
-  mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);
-  -webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);
-}
-.marquee-track{display:flex;gap:60px;width:max-content;animation:scrollX 32s linear infinite}
-.marquee:hover .marquee-track{animation-play-state:paused}
-.marquee-item{font-family:var(--f-display);font-size:.9rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--dim);white-space:nowrap;display:flex;align-items:center;gap:60px;transition:color .3s}
-.marquee-item::after{content:"◈";color:var(--accent);font-size:.8rem}
-.marquee-track:hover .marquee-item{color:var(--txt)}
-@keyframes scrollX{to{transform:translateX(-50%)}}
-
-/* ============================================================
-   11. REVEAL
-   ============================================================ */
-.reveal{opacity:0;transform:translateY(36px);transition:opacity .9s var(--ease),transform .9s var(--ease)}
-.reveal.in{opacity:1;transform:none}
-
-/* ============================================================
-   12. ABOUT + STATS
+   10. ABOUT + STATS
    ============================================================ */
 .about-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:70px;align-items:center}
 @media(max-width:960px){.about-grid{grid-template-columns:1fr;gap:50px}}
@@ -376,7 +350,7 @@ section{position:relative;padding:120px 0;scroll-margin-top:90px}
 .terminal-body .c-com{color:var(--dim)}
 
 /* ============================================================
-   13. SERVICES
+   11. SERVICES
    ============================================================ */
 .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:22px}
 .card{position:relative;padding:38px 32px;border-radius:var(--radius);background:var(--panel);border:1px solid var(--line);overflow:hidden;transition:.5s var(--ease)}
@@ -394,7 +368,7 @@ section{position:relative;padding:120px 0;scroll-margin-top:90px}
 .card-num{position:absolute;top:22px;right:26px;font-family:var(--f-mono);font-size:.7rem;color:var(--dim);letter-spacing:.1em;z-index:1}
 
 /* ============================================================
-   14. TOOLS SECTION
+   12. TOOLS SECTION
    ============================================================ */
 .tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:22px}
 .tool-card{
@@ -458,7 +432,7 @@ section{position:relative;padding:120px 0;scroll-margin-top:90px}
 .tools-empty.show{display:block}
 
 /* ============================================================
-   15. TEAM
+   13. TEAM
    ============================================================ */
 .team-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:22px}
 .member{position:relative;text-align:center;padding:40px 26px;border-radius:var(--radius);border:1px solid var(--line);background:var(--panel);overflow:hidden;transition:.5s var(--ease)}
@@ -493,7 +467,7 @@ section{position:relative;padding:120px 0;scroll-margin-top:90px}
 .socials svg{width:14px;height:14px}
 
 /* ============================================================
-   16. COMMENTS (Replacing Testimonials)
+   14. COMMENTS (Replacing Testimonials)
    ============================================================ */
 .comments-wrapper{display:grid;grid-template-columns:1fr 1.5fr;gap:40px;align-items:start}
 @media(max-width:900px){.comments-wrapper{grid-template-columns:1fr;}}
@@ -531,7 +505,7 @@ section{position:relative;padding:120px 0;scroll-margin-top:90px}
 .no-comments{text-align:center;padding:50px 20px;color:var(--dim);font-family:var(--f-mono);font-size:.8rem;border:1px dashed var(--line);border-radius:var(--radius-sm);}
 
 /* ============================================================
-   17. CONTACT + CAPTCHA
+   15. CONTACT + CAPTCHA
    ============================================================ */
 .contact-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:56px}
 @media(max-width:960px){.contact-grid{grid-template-columns:1fr;gap:44px}}
@@ -605,14 +579,14 @@ form{padding:40px;border-radius:var(--radius);border:1px solid var(--line);backg
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 
 /* ============================================================
-   18. CTA BANNER
+   16. CTA BANNER
    ============================================================ */
 .cta-banner{position:relative;overflow:hidden;text-align:center;padding:80px 40px;border-radius:26px;border:1px solid rgba(139,92,246,.3);background:radial-gradient(700px circle at 50% 0%,rgba(139,92,246,.2),transparent 68%),rgba(255,255,255,.02)}
 .cta-banner h2{font-family:var(--f-display);font-weight:900;font-size:clamp(1.6rem,4.4vw,3rem);line-height:1.14;margin-bottom:18px}
 .cta-banner p{color:var(--muted);max-width:560px;margin:0 auto 34px}
 
 /* ============================================================
-   19. FOOTER
+   17. FOOTER
    ============================================================ */
 footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px 0 30px;background:rgba(0,0,0,.35)}
 .foot-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1.4fr;gap:44px;margin-bottom:56px}
@@ -633,7 +607,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
 .foot-bottom .made b{color:var(--accent-3)}
 
 /* ============================================================
-   20. ADMIN GATE MODAL
+   18. ADMIN GATE MODAL
    ============================================================ */
 .admin-gate{
   position:fixed;inset:0;z-index:5000;
@@ -718,7 +692,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
 .admin-gate-card .btn{width:100%;justify-content:center}
 
 /* ============================================================
-   21. ADMIN PANEL
+   19. ADMIN PANEL
    ============================================================ */
 .admin-panel{
   position:fixed;inset:0;z-index:5100;
@@ -885,7 +859,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
 .settings-card p{color:var(--muted);font-size:.88rem;max-width:320px}
 
 /* ============================================================
-   22. ADMIN CONFIRMATION MODAL
+   20. ADMIN CONFIRMATION MODAL
    ============================================================ */
 .confirm-modal {
   position: fixed;
@@ -931,7 +905,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
 }
 
 /* ============================================================
-   23. REDUCED MOTION
+   21. REDUCED MOTION
    ============================================================ */
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important}
@@ -1003,10 +977,6 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
       <span class="line glitch" data-text="DARKNESS">DARKNESS</span>
     </h1>
 
-    <div class="typed-wrap reveal">
-      <span id="typed"></span><span class="caret"></span>
-    </div>
-
     <p class="lead reveal">
       We are an elite collective of engineers, designers and security researchers
       who architect resilient systems. No noise. No ego. Just code that survives
@@ -1031,24 +1001,6 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
     </div>
   </div>
 </section>
-
-<!-- ============ MARQUEE ============ -->
-<div class="marquee">
-  <div class="marquee-track" id="marquee">
-    <div class="marquee-item">Penetration Testing</div>
-    <div class="marquee-item">Distributed Systems</div>
-    <div class="marquee-item">AI Engineering</div>
-    <div class="marquee-item">Cloud Architecture</div>
-    <div class="marquee-item">Zero-Day Research</div>
-    <div class="marquee-item">Product Design</div>
-    <div class="marquee-item">Penetration Testing</div>
-    <div class="marquee-item">Distributed Systems</div>
-    <div class="marquee-item">AI Engineering</div>
-    <div class="marquee-item">Cloud Architecture</div>
-    <div class="marquee-item">Zero-Day Research</div>
-    <div class="marquee-item">Product Design</div>
-  </div>
-</div>
 
 <!-- ============ ABOUT ============ -->
 <section id="about">
@@ -1217,15 +1169,15 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
 
     <div class="team-grid">
 
-      <!-- Founder: Froste -->
+      <!-- Founder: Frosted -->
       <article class="member reveal" style="--c1:#8b5cf6;--c2:#00e5ff">
         <div class="avatar">
-          <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%230a0a13'/><path d='M50 10 C25 10 15 35 15 60 C15 80 25 95 50 95 C75 95 85 80 85 60 C85 35 75 10 50 10 Z' fill='%23111122' stroke='%232a2a3a' stroke-width='2'/><path d='M50 15 C35 15 25 30 25 50 C25 65 35 80 50 80 C65 80 75 65 75 50 C75 30 65 15 50 15 Z' fill='%231a1a2e'/><ellipse cx='50' cy='50' rx='20' ry='25' fill='%2305050a' stroke='%238b5cf6' stroke-width='1.5'/><path d='M35 45 L45 45 M55 45 L65 45' stroke='%2300e5ff' stroke-width='3' stroke-linecap='round'/><circle cx='40' cy='45' r='2' fill='%2300e5ff'/><circle cx='60' cy='45' r='2' fill='%2300e5ff'/><path d='M45 55 L55 55 L50 65 Z' fill='%23ff2d75'/><circle cx='50' cy='50' r='45' fill='none' stroke='%238b5cf6' stroke-width='1' opacity='0.5'/></svg>" alt="Froste">
+          <img src="https://drive.google.com/thumbnail?id=1LYzjPGiqE5_llgry9vi1y1IKrVum2tff" alt="Frosted">
         </div>
-        <h4>Froste</h4>
+        <h4>Frosted</h4>
         <span class="role">Founder / OSINT</span>
         <p class="bio">
-          Real Name: Froste.<br>
+          Real Name: Frosted.<br>
           Code Name: Evil Twin.<br>
           Hacker Username: Osint.
         </p>
@@ -1235,15 +1187,15 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
         </div>
       </article>
 
-      <!-- Creator: Maxwell -->
+      <!-- Creator: C -->
       <article class="member reveal" style="--c1:#ff2d75;--c2:#8b5cf6">
         <div class="avatar">
-          <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%230a0a13'/><path d='M50 10 C25 10 15 35 15 60 C15 80 25 95 50 95 C75 95 85 80 85 60 C85 35 75 10 50 10 Z' fill='%23111122' stroke='%232a2a3a' stroke-width='2'/><path d='M50 15 C35 15 25 30 25 50 C25 65 35 80 50 80 C65 80 75 65 75 50 C75 30 65 15 50 15 Z' fill='%231a1a2e'/><ellipse cx='50' cy='50' rx='20' ry='25' fill='%2305050a' stroke='%23ff2d75' stroke-width='1.5'/><path d='M35 45 L45 45 M55 45 L65 45' stroke='%2300e5ff' stroke-width='3' stroke-linecap='round'/><circle cx='40' cy='45' r='2' fill='%2300e5ff'/><circle cx='60' cy='45' r='2' fill='%2300e5ff'/><path d='M45 55 L55 55 L50 65 Z' fill='%23ff2d75'/><circle cx='50' cy='50' r='45' fill='none' stroke='%23ff2d75' stroke-width='1' opacity='0.5'/></svg>" alt="Maxwell">
+          <img src="https://drive.google.com/thumbnail?id=1M7PpdiErspbEEfe2j-lh1jsS-KZ9GgJK" alt="C">
         </div>
-        <h4>Maxwell</h4>
+        <h4>C</h4>
         <span class="role">Lead Developer / Crypt</span>
         <p class="bio">
-          Real Name: Maxwell.<br>
+          Real Name: C.<br>
           Code Name: Crypty.<br>
           Hacker Username: Anonymous_Vael.
         </p>
@@ -1952,34 +1904,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
     nums.forEach((n) => io.observe(n));
   })();
 
-  /* ---------- 9. TYPING ---------- */
-  (function typing() {
-    const el = $('#typed');
-    if (!el) return;
-    const lines = [
-      '> we architect resilient systems',
-      '> we break things, then we harden them',
-      '> we ship in the dark',
-      '> we are Code of Darkness_'
-    ];
-    if (reduceMotion) { el.textContent = lines[0]; return; }
-    let li = 0, ci = 0, deleting = false;
-    function tick() {
-      const full = lines[li];
-      if (!deleting) {
-        el.textContent = full.slice(0, ++ci);
-        if (ci === full.length) { deleting = true; return setTimeout(tick, 1900); }
-        setTimeout(tick, 52);
-      } else {
-        el.textContent = full.slice(0, --ci);
-        if (ci === 0) { deleting = false; li = (li + 1) % lines.length; return setTimeout(tick, 380); }
-        setTimeout(tick, 26);
-      }
-    }
-    setTimeout(tick, 900);
-  })();
-
-  /* ---------- 10. CARD SPOTLIGHT + TILT ---------- */
+  /* ---------- 9. CARD SPOTLIGHT + TILT ---------- */
   (function cards() {
     $$('.card').forEach((card) => {
       card.addEventListener('mousemove', (e) => {
@@ -2001,7 +1926,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
   })();
 
   /* ============================================================
-     11. COMMENTS SYSTEM
+     10. COMMENTS SYSTEM
      ============================================================ */
   const COMMENT_KEY = 'cod_comments_v1';
   const commentsList = $('#commentsList');
@@ -2071,7 +1996,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
 
   loadComments();
 
-  /* ---------- 12. CAPTCHA ---------- */
+  /* ---------- 11. CAPTCHA ---------- */
   const Captcha = (function () {
     const el = $('#captcha');
     const box = $('#captchaBox');
@@ -2119,7 +2044,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
     };
   })();
 
-  /* ---------- 13. CONTACT FORM (With EmailJS) ---------- */
+  /* ---------- 12. CONTACT FORM (With EmailJS) ---------- */
   (function form() {
     const form = $('#contactForm');
     if (!form) return;
@@ -2221,7 +2146,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
   })();
 
   /* ============================================================
-     14. SUBSCRIBERS SYSTEM
+     13. SUBSCRIBERS SYSTEM
      ============================================================ */
   const SUB_KEY = 'cod_subscribers_v1';
   const BANNED_KEY = 'cod_banned_subs_v1';
@@ -2329,7 +2254,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
   // Load subscribers on start
   loadSubscribers();
 
-  /* ---------- 15. SMOOTH ANCHORS ---------- */
+  /* ---------- 14. SMOOTH ANCHORS ---------- */
   $$('a[href^="#"]').forEach((a) => {
     a.addEventListener('click', (e) => {
       const id = a.getAttribute('href');
@@ -2343,7 +2268,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
   });
 
   /* ============================================================
-     16. TOOLS STORE
+     15. TOOLS STORE
      ============================================================ */
   const TOOL_KEY = 'cod_tools_v1';
   let tools = [];
@@ -2362,7 +2287,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
     }
   }
 
-  /* ---------- 17. RENDER TOOLS ON SITE ---------- */
+  /* ---------- 16. RENDER TOOLS ON SITE ---------- */
   const toolsGrid  = $('#toolsGrid');
   const toolsEmpty = $('#toolsEmpty');
 
@@ -2412,7 +2337,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
     }
   });
 
-  /* ---------- 18. RENDER ADMIN TOOL LIST ---------- */
+  /* ---------- 17. RENDER ADMIN TOOL LIST ---------- */
   function renderAdminTools() {
     const wrap = $('#adminTools');
     if (!wrap) return;
@@ -2458,7 +2383,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
     if (persistTools()) { renderTools(); renderAdminTools(); }
   });
 
-  /* ---------- 19. ADMIN GATE ---------- */
+  /* ---------- 18. ADMIN GATE ---------- */
   const ADMIN_PASS = '3444';
   const AUTH_KEY   = 'cod_admin_session';
 
@@ -2526,7 +2451,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
   $('#gateClose') && $('#gateClose').addEventListener('click', closeGate);
   gate && gate.addEventListener('click', (e) => { if (e.target === gate) closeGate(); });
 
-  /* ---------- 20. ADMIN ACCESS TRIGGERS ---------- */
+  /* ---------- 19. ADMIN ACCESS TRIGGERS ---------- */
   // Keyboard: Ctrl + Shift + A
   document.addEventListener('keydown', (e) => {
     if (e.ctrlKey && e.shiftKey && (e.key === 'A' || e.key === 'a')) {
@@ -2556,7 +2481,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
     });
   })();
 
-  /* ---------- 21. ADMIN PANEL CONTROLS ---------- */
+  /* ---------- 20. ADMIN PANEL CONTROLS ---------- */
   $('#adminClose') && $('#adminClose').addEventListener('click', closePanel);
   $('#lockNow') && $('#lockNow').addEventListener('click', () => {
     sessionStorage.removeItem(AUTH_KEY);
@@ -2580,7 +2505,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
     });
   });
 
-  /* ---------- 22. ADMIN: TOOL FORM ---------- */
+  /* ---------- 21. ADMIN: TOOL FORM ---------- */
   (function toolForm() {
     const form = $('#toolForm');
     if (!form) return;
@@ -2693,7 +2618,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
     });
   })();
 
-  /* ---------- 23. CLEAR ALL ---------- */
+  /* ---------- 22. CLEAR ALL ---------- */
   $('#clearAll') && $('#clearAll').addEventListener('click', () => {
     if (!confirm('Delete ALL tools? This cannot be undone.')) return;
     tools = [];
@@ -2702,11 +2627,11 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
     renderAdminTools();
   });
 
-  /* ---------- 24. BOOTSTRAP TOOLS ---------- */
+  /* ---------- 23. BOOTSTRAP TOOLS ---------- */
   loadTools();
   renderTools();
 
-  /* ---------- 25. ADMIN COMMENTS MANAGEMENT ---------- */
+  /* ---------- 24. ADMIN COMMENTS MANAGEMENT ---------- */
   function renderAdminComments() {
     const wrap = $('#adminComments');
     if (!wrap) return;
@@ -2774,7 +2699,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
   // Load comments initially if the tab is active
   renderAdminComments();
 
-  /* ---------- 26. ADMIN REQUESTS MANAGEMENT ---------- */
+  /* ---------- 25. ADMIN REQUESTS MANAGEMENT ---------- */
   function renderAdminRequests() {
     const wrap = $('#adminRequests');
     if (!wrap) return;
@@ -2838,7 +2763,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
   // Load requests initially if the tab is active
   renderAdminRequests();
 
-  /* ---------- 27. ADMIN SUBSCRIBERS MANAGEMENT ---------- */
+  /* ---------- 26. ADMIN SUBSCRIBERS MANAGEMENT ---------- */
   let currentConfirmEmail = null;
 
   function renderAdminSubscribers() {
