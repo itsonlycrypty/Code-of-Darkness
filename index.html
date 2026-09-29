@@ -327,7 +327,7 @@ section{position:relative;padding:120px 0;scroll-margin-top:90px}
 /* ============================================================
    10. ABOUT + STATS
    ============================================================ */
-.about-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:70px;align-items:center}
+.about-grid{display:grid;grid-template-columns:1fr;gap:70px;align-items:center;max-width:800px;margin-inline:auto}
 @media(max-width:960px){.about-grid{grid-template-columns:1fr;gap:50px}}
 
 .about-copy h2{font-family:var(--f-display);font-weight:800;font-size:clamp(1.8rem,4vw,2.9rem);line-height:1.14;margin-bottom:22px}
@@ -335,19 +335,6 @@ section{position:relative;padding:120px 0;scroll-margin-top:90px}
 .about-list{display:grid;gap:14px;margin:30px 0 36px}
 .about-list li{display:flex;gap:14px;align-items:flex-start;font-size:.94rem;color:#c3c7da}
 .about-list li svg{flex:0 0 18px;margin-top:4px;color:var(--accent-4)}
-
-.terminal{border-radius:var(--radius);border:1px solid var(--line);background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.012));backdrop-filter:blur(14px);overflow:hidden;box-shadow:0 30px 70px rgba(0,0,0,.6)}
-.terminal-bar{display:flex;align-items:center;gap:8px;padding:13px 16px;border-bottom:1px solid var(--line);background:rgba(0,0,0,.3)}
-.terminal-bar i{width:10px;height:10px;border-radius:50%;display:block}
-.terminal-bar i:nth-child(1){background:#ff5f57}
-.terminal-bar i:nth-child(2){background:#febc2e}
-.terminal-bar i:nth-child(3){background:#28c840}
-.terminal-bar span{margin-left:auto;font-family:var(--f-mono);font-size:.68rem;color:var(--dim);letter-spacing:.1em}
-.terminal-body{padding:26px;font-family:var(--f-mono);font-size:.82rem;line-height:2}
-.terminal-body .c-key{color:var(--accent)}
-.terminal-body .c-str{color:var(--accent-4)}
-.terminal-body .c-fn{color:var(--accent-2)}
-.terminal-body .c-com{color:var(--dim)}
 
 /* ============================================================
    11. SERVICES
@@ -1006,7 +993,6 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
 <section id="about">
   <div class="container">
     <div class="about-grid">
-
       <div class="about-copy reveal">
         <span class="eyebrow">About the collective</span>
         <h2>We don't follow trends.<br><span class="grad-text">We build what lasts.</span></h2>
@@ -1038,28 +1024,6 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
 
         <a href="#services" class="btn btn-ghost" data-cursor>What we do</a>
       </div>
-
-      <div class="terminal reveal">
-        <div class="terminal-bar">
-          <i></i><i></i><i></i>
-          <span>cod@darkness: ~/core</span>
-        </div>
-        <div class="terminal-body">
-<span class="c-com">// manifest.ts — our operating principles</span><br>
-<span class="c-key">export const</span> <span class="c-fn">CodeOfDarkness</span> = {<br>
-&nbsp;&nbsp;founded: <span class="c-str">2026</span>,<br>
-&nbsp;&nbsp;engineers: <span class="c-str">45</span>,<br>
-&nbsp;&nbsp;countries: <span class="c-str">18</span>,<br>
-&nbsp;&nbsp;principles: [<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="c-str">"security by default"</span>,<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="c-str">"ship small, ship often"</span>,<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="c-str">"no dark patterns — just dark mode"</span><br>
-&nbsp;&nbsp;],<br>
-&nbsp;&nbsp;<span class="c-fn">deploy</span>: () => <span class="c-str">"when it's ready"</span><br>
-};
-        </div>
-      </div>
-
     </div>
   </div>
 </section>
@@ -1169,17 +1133,16 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
 
     <div class="team-grid">
 
-      <!-- Founder: Frosted -->
+      <!-- Founder: Froste -->
       <article class="member reveal" style="--c1:#8b5cf6;--c2:#00e5ff">
         <div class="avatar">
-          <img src="https://drive.google.com/thumbnail?id=1LYzjPGiqE5_llgry9vi1y1IKrVum2tff" alt="Frosted">
+          <img src="https://drive.google.com/thumbnail?id=1LYzjPGiqE5_llgry9vi1y1IKrVum2tff" alt="Froste">
         </div>
-        <h4>Frosted</h4>
+        <h4>Froste</h4>
         <span class="role">Founder / OSINT</span>
         <p class="bio">
-          Real Name: Frosted.<br>
-          Code Name: Evil Twin.<br>
-          Hacker Username: Osint.
+          Real Name: Froste.<br>
+          Code Name: Evil Twin.
         </p>
         <div class="socials">
           <a href="#" aria-label="GitHub"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2A10 10 0 0 0 8.84 21.5c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.1-1.47-1.1-1.47-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02a9.5 9.5 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10 10 0 0 0 12 2z"/></svg></a>
@@ -1193,29 +1156,10 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
           <img src="https://drive.google.com/thumbnail?id=1M7PpdiErspbEEfe2j-lh1jsS-KZ9GgJK" alt="C">
         </div>
         <h4>C</h4>
-        <span class="role">Lead Developer / Crypt</span>
+        <span class="role">Lead Developer / Crypty</span>
         <p class="bio">
           Real Name: C.<br>
-          Code Name: Crypty.<br>
-          Hacker Username: Anonymous_Vael.
-        </p>
-        <div class="socials">
-          <a href="#" aria-label="GitHub"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2A10 10 0 0 0 8.84 21.5c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.1-1.47-1.1-1.47-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02a9.5 9.5 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10 10 0 0 0 12 2z"/></svg></a>
-          <a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5A2.5 2.5 0 1 0 5 8.5a2.5 2.5 0 0 0-.02-5zM3 9h4v12H3zM9 9h3.8v1.7h.05c.53-1 1.83-2.05 3.77-2.05C20.4 8.65 21 11.1 21 14.2V21h-4v-6c0-1.43-.03-3.28-2-3.28-2 0-2.3 1.56-2.3 3.17V21H9z"/></svg></a>
-        </div>
-      </article>
-
-      <!-- New Developer: Anony Mous -->
-      <article class="member reveal" style="--c1:#22ff88;--c2:#8b5cf6">
-        <div class="avatar">
-          <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%230a0a13'/><path d='M50 10 C25 10 15 35 15 60 C15 80 25 95 50 95 C75 95 85 80 85 60 C85 35 75 10 50 10 Z' fill='%23111122' stroke='%232a2a3a' stroke-width='2'/><path d='M50 15 C35 15 25 30 25 50 C25 65 35 80 50 80 C65 80 75 65 75 50 C75 30 65 15 50 15 Z' fill='%231a1a2e'/><ellipse cx='50' cy='50' rx='20' ry='25' fill='%2305050a' stroke='%2322ff88' stroke-width='1.5'/><path d='M35 45 L45 45 M55 45 L65 45' stroke='%2300e5ff' stroke-width='3' stroke-linecap='round'/><circle cx='40' cy='45' r='2' fill='%2300e5ff'/><circle cx='60' cy='45' r='2' fill='%2300e5ff'/><path d='M45 55 L55 55 L50 65 Z' fill='%23ff2d75'/><circle cx='50' cy='50' r='45' fill='none' stroke='%2322ff88' stroke-width='1' opacity='0.5'/></svg>" alt="Anony Mous">
-        </div>
-        <h4>Anony Mous</h4>
-        <span class="role">Developer / Beta</span>
-        <p class="bio">
-          Real Name: Anony Mous.<br>
-          Code Name: Anonymous-beta.<br>
-          Hacker Username: Anonymous-beta.
+          Code Name: Crypty.
         </p>
         <div class="socials">
           <a href="#" aria-label="GitHub"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2A10 10 0 0 0 8.84 21.5c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.1-1.47-1.1-1.47-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02a9.5 9.5 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10 10 0 0 0 12 2z"/></svg></a>
