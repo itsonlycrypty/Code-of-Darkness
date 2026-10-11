@@ -148,6 +148,16 @@ section{position:relative;padding:120px 0;scroll-margin-top:90px}
   background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;
   animation:pulse 1.8s ease-in-out infinite;
 }
+.pre-subtitle {
+  font-family: var(--f-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.4em;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-top: -10px;
+  margin-bottom: 10px;
+  animation: pulse 1.8s ease-in-out infinite;
+}
 @keyframes pulse{0%,100%{opacity:.55;filter:blur(.4px)}50%{opacity:1;filter:blur(0)}}
 .pre-bar{width:220px;height:2px;background:rgba(255,255,255,.08);overflow:hidden;border-radius:4px}
 .pre-bar span{display:block;height:100%;width:40%;background:var(--grad);animation:slide 1.2s ease-in-out infinite}
@@ -902,6 +912,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
 <!-- ============ PRELOADER ============ -->
 <div id="preloader">
   <div class="pre-logo">C.O.D</div>
+  <div class="pre-subtitle">CODE OF DARKNESS</div>
   <div class="pre-bar"><span></span></div>
 </div>
 
@@ -1599,10 +1610,23 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
   /* ---------- 1. PRELOADER ---------- */
   window.addEventListener('load', () => {
     setTimeout(() => {
-      $('#preloader').classList.add('done');
-      document.body.classList.remove('lock');
+      const preloader = $('#preloader');
+      if (preloader) {
+        preloader.classList.add('done');
+        document.body.classList.remove('lock');
+      }
     }, 700);
   });
+
+  // Fallback: hide preloader after 4 seconds just in case the load event is delayed
+  setTimeout(() => {
+    const preloader = $('#preloader');
+    if (preloader && !preloader.classList.contains('done')) {
+      preloader.classList.add('done');
+      document.body.classList.remove('lock');
+    }
+  }, 4000);
+
   document.body.classList.add('lock');
 
   /* ---------- 2. YEAR ---------- */
@@ -2095,16 +2119,13 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
   }
 
   function saveSubscriber(email) {
-    // Basic email regex validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
     if (!emailRegex.test(email)) return false;
 
-    // Check if banned
     if (bannedSubs.some(s => s.email.toLowerCase() === email.toLowerCase())) {
       return 'banned';
     }
 
-    // Check for duplicates
     if (subscribers.some(s => s.email.toLowerCase() === email.toLowerCase())) {
       return 'duplicate';
     }
@@ -2126,7 +2147,6 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
     if (navBadge) navBadge.textContent = count;
   }
 
-  // Handle Newsletter form
   const newsletterForm = $('#newsletterForm');
   if (newsletterForm) {
     newsletterForm.addEventListener('submit', (e) => {
@@ -2146,7 +2166,6 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
         statusEl.style.color = 'var(--accent-4)';
         statusEl.style.display = 'block';
 
-        // Send Welcome Email via EmailJS if configured
         const ejConfig = JSON.parse(localStorage.getItem('cod_emailjs_v1')) || {};
         if (ejConfig.publicKey && ejConfig.serviceId && ejConfig.templateAuto) {
           emailjs.init(ejConfig.publicKey);
@@ -2184,7 +2203,6 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
     });
   }
 
-  // Load subscribers on start
   loadSubscribers();
 
   /* ---------- 14. SMOOTH ANCHORS ---------- */
@@ -2249,4 +2267,568 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
         <article class="tool-card reveal in">
           <div class="tool-icon">${escapeHtml(t.icon || '⚙')}</div>
           <span class="tool-cat">${escapeHtml(t.category || 'Tool')}</span>
-          <h3
+          <h3>${escapeHtml(t.name)}</h3>
+          <p>${escapeHtml(t.desc)}</p>
+          <div class="tool-actions">
+            ${launchBtn}
+            ${ghBtn}
+          </div>
+        </article>
+      `;
+    }).join('');
+  }
+
+  // Delegated GitHub handler — URL is stored in JS memory, never in DOM text
+  toolsGrid && toolsGrid.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-github]');
+    if (!btn) return;
+    const t = tools.find((x) => x.id === btn.dataset.github);
+    if (t && t.github) {
+      window.open(t.github, '_blank', 'noopener,noreferrer');
+    }
+  });
+
+  /* ---------- 17. RENDER ADMIN TOOL LIST ---------- */
+  function renderAdminTools() {
+    const wrap = $('#adminTools');
+    if (!wrap) return;
+
+    if (!tools.length) {
+      wrap.innerHTML = `
+        <div style="padding:40px;text-align:center;border:1px dashed var(--line-hi);border-radius:14px;color:var(--dim);font-family:var(--f-mono);font-size:.8rem">
+          No tools deployed yet.
+        </div>`;
+      return;
+    }
+
+    wrap.innerHTML = tools.map((t) => {
+      const meta = [
+        `<b>${t.type === 'file' ? 'FILE' : 'LINK'}</b>`,
+        t.github ? `<b>GH</b>` : '',
+        escapeHtml(t.category || '')
+      ].filter(Boolean).join(' · ');
+
+      return `
+        <div class="admin-tool-row">
+          <div class="row-icon">${escapeHtml(t.icon || '⚙')}</div>
+          <div class="row-info">
+            <strong>${escapeHtml(t.name)}</strong>
+            <span>${meta}</span>
+          </div>
+          <button type="button" class="row-del" data-del="${escapeAttr(t.id)}" aria-label="Delete tool" title="Delete">
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6M10 11v5M14 11v5"/>
+            </svg>
+          </button>
+        </div>
+      `;
+    }).join('');
+  }
+
+  $('#adminTools') && $('#adminTools').addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-del]');
+    if (!btn) return;
+    const id = btn.dataset.del;
+    if (!confirm('Delete this tool?')) return;
+    tools = tools.filter((t) => t.id !== id);
+    if (persistTools()) { renderTools(); renderAdminTools(); }
+  });
+
+  /* ---------- 18. ADMIN GATE ---------- */
+  const ADMIN_PASS = '3444';
+  const AUTH_KEY   = 'cod_admin_session';
+
+  const gate   = $('#adminGate');
+  const gateCard = $('#gateCard');
+  const gatePass = $('#gatePass');
+  const gateErr  = $('#gateError');
+  const gateBtn  = $('#gateSubmit');
+  const panel    = $('#adminPanel');
+  const confirmModal = $('#confirmModal');
+
+  function openGate() {
+    gate.classList.add('open');
+    gate.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('lock');
+    gatePass.value = '';
+    gateErr.classList.remove('show');
+    setTimeout(() => gatePass.focus(), 200);
+  }
+
+  function closeGate() {
+    gate.classList.remove('open');
+    gate.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('lock');
+  }
+
+  function openPanel() {
+    panel.classList.add('open');
+    panel.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('lock');
+    renderAdminTools();
+    renderAdminRequests();
+    renderAdminSubscribers();
+    renderAdminComments();
+    sessionStorage.setItem(AUTH_KEY, '1');
+  }
+
+  function closePanel() {
+    panel.classList.remove('open');
+    panel.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('lock');
+  }
+
+  function attemptUnlock() {
+    const value = gatePass.value.trim();
+    if (value === ADMIN_PASS) {
+      gateErr.classList.remove('show');
+      closeGate();
+      openPanel();
+      gatePass.value = '';
+    } else {
+      gateErr.classList.add('show');
+      gateCard.classList.remove('shake');
+      void gateCard.offsetWidth;
+      gateCard.classList.add('shake');
+      gatePass.value = '';
+      gatePass.focus();
+    }
+  }
+
+  gateBtn && gateBtn.addEventListener('click', attemptUnlock);
+  gatePass && gatePass.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') { e.preventDefault(); attemptUnlock(); }
+  });
+  $('#gateClose') && $('#gateClose').addEventListener('click', closeGate);
+  gate && gate.addEventListener('click', (e) => { if (e.target === gate) closeGate(); });
+
+  /* ---------- 19. ADMIN ACCESS TRIGGERS ---------- */
+  // Keyboard: Ctrl + Shift + A
+  document.addEventListener('keydown', (e) => {
+    if (e.ctrlKey && e.shiftKey && (e.key === 'A' || e.key === 'a')) {
+      e.preventDefault();
+      if (sessionStorage.getItem(AUTH_KEY)) openPanel();
+      else openGate();
+    }
+    if (e.key === 'Escape' && gate.classList.contains('open')) closeGate();
+    if (e.key === 'Escape' && confirmModal.classList.contains('open')) confirmModal.classList.remove('open');
+  });
+
+  // Secret: click the logo mark 5 times within 2 seconds
+  (function secretLogo() {
+    const trigger = $('#logoTrigger');
+    if (!trigger) return;
+    let count = 0, timer = null;
+    trigger.addEventListener('click', (e) => {
+      count++;
+      clearTimeout(timer);
+      timer = setTimeout(() => { count = 0; }, 2000);
+      if (count >= 5) {
+        e.preventDefault();
+        count = 0;
+        if (sessionStorage.getItem(AUTH_KEY)) openPanel();
+        else openGate();
+      }
+    });
+  })();
+
+  /* ---------- 20. ADMIN PANEL CONTROLS ---------- */
+  $('#adminClose') && $('#adminClose').addEventListener('click', closePanel);
+  $('#lockNow') && $('#lockNow').addEventListener('click', () => {
+    sessionStorage.removeItem(AUTH_KEY);
+    closePanel();
+  });
+
+  /* Tabs */
+  $$('.admin-side nav a').forEach((link) => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const tab = link.dataset.tab;
+      $$('.admin-side nav a').forEach((l) => l.classList.remove('active'));
+      link.classList.add('active');
+      $$('.admin-tab').forEach((t) => t.classList.remove('active'));
+      const target = $('#tab-' + tab);
+      if (target) target.classList.add('active');
+      if (tab === 'manage') renderAdminTools();
+      if (tab === 'comments') renderAdminComments();
+      if (tab === 'requests') renderAdminRequests();
+      if (tab === 'subscribers') renderAdminSubscribers();
+    });
+  });
+
+  /* ---------- 21. ADMIN: TOOL FORM ---------- */
+  (function toolForm() {
+    const form = $('#toolForm');
+    if (!form) return;
+
+    const typeSelect  = $('#toolType');
+    const linkField   = $('#toolLinkField');
+    const fileField   = $('#toolFileField');
+    const fileInput   = $('#toolFile');
+    const fileName    = $('#fileName');
+    const status      = $('#toolStatus');
+
+    let pendingFileData = null;
+    let pendingFileName = '';
+
+    typeSelect.addEventListener('change', () => {
+      const isFile = typeSelect.value === 'file';
+      linkField.style.display = isFile ? 'none' : '';
+      fileField.style.display = isFile ? '' : 'none';
+      $('#toolUrl').required = !isFile;
+    });
+
+    fileInput.addEventListener('change', (e) => {
+      const f = e.target.files[0];
+      pendingFileData = null;
+      pendingFileName = '';
+
+      if (!f) {
+        fileName.textContent = '';
+        return;
+      }
+      if (f.size > 2 * 1024 * 1024) {
+        fileName.textContent = '⚠ File exceeds 2 MB limit';
+        fileName.style.color = 'var(--accent-3)';
+        fileInput.value = '';
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        pendingFileData = reader.result;
+        pendingFileName = f.name;
+        fileName.textContent = `✓ ${f.name} (${(f.size / 1024).toFixed(1)} KB)`;
+        fileName.style.color = 'var(--accent-4)';
+      };
+      reader.onerror = () => {
+        fileName.textContent = '⚠ Could not read file';
+        fileName.style.color = 'var(--accent-3)';
+      };
+      reader.readAsDataURL(f);
+    });
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const name = $('#toolName').value.trim();
+      const icon = $('#toolIcon').value.trim() || '⚙';
+      const cat  = $('#toolCat').value.trim() || 'Tool';
+      const desc = $('#toolDesc').value.trim();
+      const type = typeSelect.value;
+      const url  = $('#toolUrl').value.trim();
+      const gh   = $('#toolGithub').value.trim();
+
+      if (!name || !desc) {
+        alert('Please provide a name and description.');
+        return;
+      }
+      if (type === 'link' && !url) {
+        alert('Please provide a tool URL.');
+        return;
+      }
+      if (type === 'file' && !pendingFileData) {
+        alert('Please select a file to upload.');
+        return;
+      }
+
+      const tool = {
+        id: 't_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8),
+        name,
+        icon,
+        category: cat,
+        desc,
+        type,
+        url: type === 'link' ? url : '',
+        fileName: type === 'file' ? (pendingFileName || name) : '',
+        fileData: type === 'file' ? pendingFileData : '',
+        github: gh || '',
+        createdAt: Date.now()
+      };
+
+      tools.unshift(tool);
+      if (!persistTools()) {
+        tools.shift();
+        return;
+      }
+
+      renderTools();
+      renderAdminTools();
+
+      form.reset();
+      $('#toolIcon').value = '⚙';
+      $('#toolCat').value = 'Utility';
+      linkField.style.display = '';
+      fileField.style.display = 'none';
+      fileName.textContent = '';
+      pendingFileData = null;
+      pendingFileName = '';
+
+      status.classList.add('show');
+      setTimeout(() => status.classList.remove('show'), 4000);
+    });
+  })();
+
+  /* ---------- 22. CLEAR ALL ---------- */
+  $('#clearAll') && $('#clearAll').addEventListener('click', () => {
+    if (!confirm('Delete ALL tools? This cannot be undone.')) return;
+    tools = [];
+    try { localStorage.removeItem(TOOL_KEY); } catch {}
+    renderTools();
+    renderAdminTools();
+  });
+
+  /* ---------- 23. BOOTSTRAP TOOLS ---------- */
+  loadTools();
+  renderTools();
+
+  /* ---------- 24. ADMIN COMMENTS MANAGEMENT ---------- */
+  function renderAdminComments() {
+    const wrap = $('#adminComments');
+    if (!wrap) return;
+    let comments = [];
+    try { comments = JSON.parse(localStorage.getItem(COMMENT_KEY)) || []; } catch {}
+
+    if (comments.length === 0) {
+      wrap.innerHTML = '<div style="padding:40px;text-align:center;border:1px dashed var(--line-hi);border-radius:14px;color:var(--dim);font-family:var(--f-mono);font-size:.8rem">No comments yet.</div>';
+      return;
+    }
+
+    wrap.innerHTML = comments.map(c => {
+      const dateStr = new Date(c.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+      return `
+        <div class="admin-tool-row" style="align-items:flex-start;flex-direction:column;gap:12px;padding:20px;">
+          <div style="display:flex;justify-content:space-between;width:100%;align-items:center;flex-wrap:wrap;gap:10px;">
+            <div>
+              <strong style="color:var(--accent-2);font-size:1rem;">${escapeHtml(c.name)}</strong>
+              <span style="font-family:var(--f-mono);font-size:.75rem;color:var(--dim);margin-left:10px;">${dateStr}</span>
+            </div>
+          </div>
+          <div style="font-size:.85rem;color:var(--txt);width:100%;line-height:1.6;background:rgba(0,0,0,.2);padding:12px;border-radius:8px;border:1px solid var(--line);">
+            ${escapeHtml(c.message)}
+            ${c.adminReply ? `<div style="margin-top:10px;padding-top:10px;border-top:1px dashed var(--line);"><span style="color:var(--accent);font-weight:bold;font-family:var(--f-mono);font-size:.75rem;">ADMIN REPLY:</span><br>${escapeHtml(c.adminReply)}</div>` : ''}
+          </div>
+          <div style="display:flex;gap:10px;width:100%;justify-content:flex-end;margin-top:8px;flex-wrap:wrap;">
+            <button type="button" class="btn-admin" style="font-size:.7rem;padding:8px 16px;" data-reply="${c.id}">Reply</button>
+            <button type="button" class="btn-admin danger" style="font-size:.7rem;padding:8px 16px;" data-del-comment="${c.id}">Delete</button>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // Event listeners for comments (Reply & Delete)
+  $('#adminComments') && $('#adminComments').addEventListener('click', (e) => {
+    const replyBtn = e.target.closest('[data-reply]');
+    if (replyBtn) {
+      const id = parseInt(replyBtn.dataset.reply);
+      let comments = JSON.parse(localStorage.getItem(COMMENT_KEY)) || [];
+      const comment = comments.find(x => x.id === id);
+      if (!comment) return;
+      
+      const replyText = prompt('Enter your reply to this comment:', comment.adminReply || '');
+      if (replyText !== null) {
+        comment.adminReply = replyText.trim();
+        localStorage.setItem(COMMENT_KEY, JSON.stringify(comments));
+        renderAdminComments();
+        renderComments(comments); // Update the frontend immediately
+      }
+    }
+
+    const delBtn = e.target.closest('[data-del-comment]');
+    if (delBtn) {
+      if (!confirm('Delete this comment?')) return;
+      const id = parseInt(delBtn.dataset.delComment);
+      let comments = JSON.parse(localStorage.getItem(COMMENT_KEY)) || [];
+      comments = comments.filter(x => x.id !== id);
+      localStorage.setItem(COMMENT_KEY, JSON.stringify(comments));
+      renderAdminComments();
+      renderComments(comments); // Update the frontend immediately
+    }
+  });
+
+  // Load comments initially if the tab is active
+  renderAdminComments();
+
+  /* ---------- 25. ADMIN REQUESTS MANAGEMENT ---------- */
+  function renderAdminRequests() {
+    const wrap = $('#adminRequests');
+    if (!wrap) return;
+    let requests = [];
+    try { requests = JSON.parse(localStorage.getItem('cod_requests_v1')) || []; } catch {}
+
+    if (requests.length === 0) {
+      wrap.innerHTML = '<div style="padding:40px;text-align:center;border:1px dashed var(--line-hi);border-radius:14px;color:var(--dim);font-family:var(--f-mono);font-size:.8rem">No requests yet.</div>';
+      return;
+    }
+
+    wrap.innerHTML = requests.map(r => {
+      const mailtoLink = `mailto:${escapeAttr(r.email)}?subject=${encodeURIComponent('Re: ' + r.subject)}&body=${encodeURIComponent('Hello ' + r.name + ',\n\n')}`;
+      return `
+        <div class="admin-tool-row" style="align-items:flex-start;flex-direction:column;gap:12px;padding:20px;">
+          <div style="display:flex;justify-content:space-between;width:100%;align-items:center;flex-wrap:wrap;gap:10px;">
+            <div>
+              <strong style="color:var(--accent-2);font-size:1rem;">${escapeHtml(r.name)}</strong>
+              <span style="font-family:var(--f-mono);font-size:.75rem;color:var(--dim);margin-left:10px;">&lt;${escapeHtml(r.email)}&gt;</span>
+            </div>
+            <span class="admin-badge" style="font-size:.6rem;padding:4px 8px;${r.status === 'new' ? 'color:var(--accent-2);border-color:var(--accent-2);background:rgba(0,229,255,.08);' : ''}">${r.status.toUpperCase()}</span>
+          </div>
+          <div style="font-size:.85rem;color:var(--txt);width:100%;line-height:1.6;background:rgba(0,0,0,.2);padding:12px;border-radius:8px;border:1px solid var(--line);">
+            <b style="color:var(--dim);font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;">Subject:</b> ${escapeHtml(r.subject)}<br><br>
+            <b style="color:var(--dim);font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;">Message:</b><br> ${escapeHtml(r.message)}
+          </div>
+          <div style="display:flex;gap:10px;width:100%;justify-content:flex-end;margin-top:8px;flex-wrap:wrap;">
+            <a href="${mailtoLink}" class="btn-admin" style="font-size:.7rem;padding:8px 16px;">Reply via Email</a>
+            <button type="button" class="btn-admin" style="font-size:.7rem;padding:8px 16px;" data-mark="${r.id}">Mark Read</button>
+            <button type="button" class="btn-admin danger" style="font-size:.7rem;padding:8px 16px;" data-del-req="${r.id}">Delete</button>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // Event listeners for marking read and deleting requests
+  $('#adminRequests') && $('#adminRequests').addEventListener('click', (e) => {
+    const markBtn = e.target.closest('[data-mark]');
+    if (markBtn) {
+      const id = markBtn.dataset.mark;
+      let requests = JSON.parse(localStorage.getItem('cod_requests_v1')) || [];
+      const req = requests.find(x => x.id === id);
+      if (req) {
+        req.status = 'read';
+        localStorage.setItem('cod_requests_v1', JSON.stringify(requests));
+        renderAdminRequests();
+      }
+    }
+    const delBtn = e.target.closest('[data-del-req]');
+    if (delBtn) {
+      if (!confirm('Delete this request?')) return;
+      const id = delBtn.dataset.delReq;
+      let requests = JSON.parse(localStorage.getItem('cod_requests_v1')) || [];
+      requests = requests.filter(x => x.id !== id);
+      localStorage.setItem('cod_requests_v1', JSON.stringify(requests));
+      renderAdminRequests();
+    }
+  });
+
+  // Load requests initially if the tab is active
+  renderAdminRequests();
+
+  /* ---------- 26. ADMIN SUBSCRIBERS MANAGEMENT ---------- */
+  let currentConfirmEmail = null;
+
+  function renderAdminSubscribers() {
+    const wrap = $('#adminSubscribers');
+    if (!wrap) return;
+
+    if (subscribers.length === 0) {
+      wrap.innerHTML = '<div style="padding:40px;text-align:center;border:1px dashed var(--line-hi);border-radius:14px;color:var(--dim);font-family:var(--f-mono);font-size:.8rem">No subscribers yet.</div>';
+      return;
+    }
+
+    wrap.innerHTML = subscribers.map((s, index) => {
+      const dateStr = new Date(s.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+      return `
+        <div class="admin-tool-row" style="justify-content:space-between;">
+          <div style="display:flex;align-items:center;gap:16px;flex:1;min-width:0;">
+            <div class="row-icon" style="font-size:1rem;font-weight:bold;color:var(--accent-2);">${index + 1}</div>
+            <div class="row-info">
+              <strong>${escapeHtml(s.email)}</strong>
+              <span>Subscribed: ${dateStr}</span>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button type="button" class="btn-admin" style="font-size:.7rem;padding:8px 16px;" data-confirm="${escapeAttr(s.email)}">Send Confirmation</button>
+            <button type="button" class="btn-admin danger" style="font-size:.7rem;padding:8px 16px;" data-ban="${escapeAttr(s.email)}">Ban</button>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // Event listeners for subscribers (Send Confirmation & Ban)
+  $('#adminSubscribers') && $('#adminSubscribers').addEventListener('click', (e) => {
+    const confirmBtn = e.target.closest('[data-confirm]');
+    if (confirmBtn) {
+      currentConfirmEmail = confirmBtn.dataset.confirm;
+      confirmModal.classList.add('open');
+      confirmModal.setAttribute('aria-hidden', 'false');
+      return;
+    }
+
+    const banBtn = e.target.closest('[data-ban]');
+    if (banBtn) {
+      const email = banBtn.dataset.ban;
+      if (!confirm(`Ban subscriber ${email}? They will be removed and unable to subscribe again.`)) return;
+
+      // Remove from subscribers
+      subscribers = subscribers.filter(s => s.email.toLowerCase() !== email.toLowerCase());
+      // Add to banned list
+      if (!bannedSubs.some(s => s.email.toLowerCase() === email.toLowerCase())) {
+        bannedSubs.push({ email: email, date: new Date().toISOString() });
+      }
+
+      try {
+        localStorage.setItem(SUB_KEY, JSON.stringify(subscribers));
+        localStorage.setItem(BANNED_KEY, JSON.stringify(bannedSubs));
+        updateSubCountUI();
+        renderAdminSubscribers();
+      } catch (err) {
+        alert('Error saving data. Please try again.');
+      }
+    }
+  });
+
+  // Confirm Modal Actions
+  $('#closeConfirmModal') && $('#closeConfirmModal').addEventListener('click', () => {
+    confirmModal.classList.remove('open');
+    confirmModal.setAttribute('aria-hidden', 'true');
+    currentConfirmEmail = null;
+  });
+
+  $('#sendManualBtn') && $('#sendManualBtn').addEventListener('click', () => {
+    if (!currentConfirmEmail) return;
+    const mailtoLink = `mailto:${escapeAttr(currentConfirmEmail)}?subject=${encodeURIComponent('Welcome to Code of Darkness')}&body=${encodeURIComponent('Hello,\n\nThank you for subscribing to Code of Darkness. You are now a member.\n\nStay in the dark,\nCode of Darkness Team')}`;
+    window.location.href = mailtoLink;
+    confirmModal.classList.remove('open');
+    confirmModal.setAttribute('aria-hidden', 'true');
+    currentConfirmEmail = null;
+  });
+
+  $('#sendAutoBtn') && $('#sendAutoBtn').addEventListener('click', () => {
+    if (!currentConfirmEmail) return;
+    const ejConfig = JSON.parse(localStorage.getItem('cod_emailjs_v1')) || {};
+    if (!ejConfig.publicKey || !ejConfig.serviceId || !ejConfig.templateAuto) {
+      alert('EmailJS is not configured. Please configure it first.');
+      confirmModal.classList.remove('open');
+      confirmModal.setAttribute('aria-hidden', 'true');
+      currentConfirmEmail = null;
+      return;
+    }
+    emailjs.init(ejConfig.publicKey);
+    const welcomeParams = {
+      to_email: currentConfirmEmail,
+      from_name: 'Code of Darkness',
+      message: 'Thank you for subscribing. You are now a member.',
+      reply_to: 'wmax8808@gmail.com'
+    };
+    emailjs.send(ejConfig.serviceId, ejConfig.templateAuto, welcomeParams)
+      .then(() => {
+        alert('Confirmation email sent successfully!');
+        confirmModal.classList.remove('open');
+        confirmModal.setAttribute('aria-hidden', 'true');
+        currentConfirmEmail = null;
+      })
+      .catch((err) => {
+        alert('Failed to send email. Check console for details.');
+        console.error(err);
+      });
+  });
+
+  // Load subscribers initially if the tab is active
+  renderAdminSubscribers();
+
+})();
+</script>
+</body>
+   </html>
