@@ -258,6 +258,23 @@ section{position:relative;padding:120px 0;scroll-margin-top:90px}
 .burger.open span:nth-child(2){opacity:0;transform:scaleX(0)}
 .burger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
 
+/* Mobile Menu Close Button */
+.nav-close-btn {
+  display: none;
+  position: absolute;
+  top: 20px;
+  right: 24px;
+  font-size: 2rem;
+  color: var(--txt);
+  background: none;
+  border: none;
+  cursor: pointer;
+  z-index: 10000;
+  line-height: 1;
+  transition: color 0.3s;
+}
+.nav-close-btn:hover { color: var(--accent-3); }
+
 @media(max-width:1080px){
   .burger{display:flex}
   .nav-links{
@@ -276,6 +293,7 @@ section{position:relative;padding:120px 0;scroll-margin-top:90px}
   .nav-links.open{transform:translateY(0)}
   .nav-links a{font-size:1.15rem;letter-spacing:.06em}
   .nav-cta{padding:14px 36px !important}
+  .nav-close-btn{display: block;}
 }
 
 /* ============================================================
@@ -938,6 +956,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
     </a>
 
     <nav class="nav-links" id="navLinks">
+      <button class="nav-close-btn" id="navClose" aria-label="Close menu">&times;</button>
       <a href="#home">Home</a>
       <a href="#about">About</a>
       <a href="#services">Services</a>
@@ -969,10 +988,10 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
       <span class="line glitch" data-text="DARKNESS">DARKNESS</span>
     </h1>
 
+    <!-- UPDATED HERO TEXT AS REQUESTED -->
     <p class="lead reveal">
-      We are an elite collective of engineers, designers and security researchers
-      who architect resilient systems. No noise. No ego. Just code that survives
-      the dark.
+      We are a group of developers and cyber hackers trying to make a better future. 
+      No noise. No ego. Just code that survives the dark.
     </p>
 
     <div class="hero-actions reveal">
@@ -988,23 +1007,19 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
 </section>
 
 <!-- ============ ABOUT ============ -->
-<!-- UPDATED SECTION AS REQUESTED -->
 <section id="about">
   <div class="container">
     <div class="about-grid">
       <div class="about-copy reveal">
         <span class="eyebrow">About the collective</span>
         <h2>We don't follow trends.<br><span class="grad-text">We build what lasts.</span></h2>
+        <!-- UPDATED ABOUT TEXT AS REQUESTED -->
         <p>
           We are a group of developers and cyber hackers trying to make a better future.
-          Code of Darkness was created by frosted (evil twin) and c-crypty (anonymous_vael).
+          Code of Darkness was created by frostee (evil twin) and c-crypty (anonymous_vael).
           They met and created the organisation, helping people resisting and trying to make a better future.
         </p>
-        <p>
-          We take on the problems other teams run from: legacy migrations nobody
-          wants to touch, infrastructure that has to survive an audit, ML systems
-          that need to be explainable, not just accurate.
-        </p>
+        <!-- REMOVED SECOND PARAGRAPH AS REQUESTED -->
 
         <ul class="about-list">
           <li>
@@ -1122,7 +1137,6 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
 </section>
 
 <!-- ============ TEAM ============ -->
-<!-- UPDATED TEAM SECTION AS REQUESTED -->
 <section id="team">
   <div class="container">
     <div class="section-head center reveal">
@@ -1167,7 +1181,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
         </div>
       </article>
 
-      <!-- Xploit Hunter (Changed from Xeploit) -->
+      <!-- Xploit Hunter -->
       <article class="member reveal" style="--c1:#00e5ff;--c2:#22ff88">
         <div class="avatar">
           <img src="https://drive.google.com/thumbnail?id=1MzKTVhLIrgXn7U5iCplYXt_q5Z2kJ8-w" alt="Xploit Hunter">
@@ -1237,10 +1251,6 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
     <div class="contact-grid">
 
       <div class="contact-info reveal">
-        <!-- Removed Code of Darkness Email Info Card -->
-        
-        <!-- Removed Distributed HQ Info Card -->
-
         <!-- WhatsApp Card -->
         <div class="info-card">
           <div class="ico">
@@ -1252,7 +1262,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
           </div>
         </div>
 
-        <!-- Telegram Card - UPDATED CHANNEL LINK -->
+        <!-- Telegram Card -->
         <div class="info-card">
           <div class="ico">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 4.5 2.5 11.5l4.8 1.4L9 18l3.5-4.5 5.5 2.5z"/></svg>
@@ -1363,7 +1373,6 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
           <span class="logo-text">CODE<span>·</span>DARKNESS</span>
         </a>
         <p>An elite tech collective engineering secure, scalable systems for teams who can't afford to guess.</p>
-        <!-- Updated Socials: Only WhatsApp and Telegram -->
         <div class="socials" style="justify-content:flex-start">
           <a href="https://t.me/Code_Of_Darknes" target="_blank" rel="noopener noreferrer" aria-label="Telegram" style="color:var(--accent-2)">
             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.5 4.5 2.5 11.5l4.8 1.4L9 18l3.5-4.5 5.5 2.5z"/></svg>
@@ -1780,12 +1789,18 @@ footer{position:relative;z-index:3;border-top:1px solid var(--line);padding:70px
       document.body.classList.remove('lock');
     };
 
+    // Attach event listeners for both burger and the new close button
     burger.addEventListener('click', () => {
       const open = links.classList.toggle('open');
       burger.classList.toggle('open', open);
       burger.setAttribute('aria-expanded', String(open));
       document.body.classList.toggle('lock', open);
     });
+
+    const navCloseBtn = $('#navClose');
+    if (navCloseBtn) {
+      navCloseBtn.addEventListener('click', closeMenu);
+    }
 
     anchors.forEach((a) => a.addEventListener('click', closeMenu));
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMenu(); });
